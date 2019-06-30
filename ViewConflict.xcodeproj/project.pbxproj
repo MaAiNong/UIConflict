@@ -13,6 +13,8 @@
 		77B4ECA922C874FD00F09B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77B4ECA822C874FD00F09B07 /* Assets.xcassets */; };
 		77B4ECAC22C874FD00F09B07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77B4ECAA22C874FD00F09B07 /* LaunchScreen.storyboard */; };
 		77B4ECAF22C874FD00F09B07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECAE22C874FD00F09B07 /* main.m */; };
+		77B4ECB722C875DC00F09B07 /* QYPlayerViewConflictManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECB622C875DC00F09B07 /* QYPlayerViewConflictManager.m */; };
+		77B4ECBC22C8803E00F09B07 /* QYPlayerViewConflictDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECBB22C8803E00F09B07 /* QYPlayerViewConflictDefine.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,12 @@
 		77B4ECAB22C874FD00F09B07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		77B4ECAD22C874FD00F09B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77B4ECAE22C874FD00F09B07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		77B4ECB522C875DC00F09B07 /* QYPlayerViewConflictManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictManager.h; sourceTree = "<group>"; };
+		77B4ECB622C875DC00F09B07 /* QYPlayerViewConflictManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYPlayerViewConflictManager.m; sourceTree = "<group>"; };
+		77B4ECB822C87D4E00F09B07 /* QYPlayerViewConflictConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictConstants.h; sourceTree = "<group>"; };
+		77B4ECBA22C8803E00F09B07 /* QYPlayerViewConflictDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictDefine.h; sourceTree = "<group>"; };
+		77B4ECBB22C8803E00F09B07 /* QYPlayerViewConflictDefine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYPlayerViewConflictDefine.m; sourceTree = "<group>"; };
+		77B4ECBD22C88F5800F09B07 /* QYPlayerConflictViewMessage+internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QYPlayerConflictViewMessage+internal.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,12 @@
 			children = (
 				77B4EC9F22C874F900F09B07 /* AppDelegate.h */,
 				77B4ECA022C874F900F09B07 /* AppDelegate.m */,
+				77B4ECB822C87D4E00F09B07 /* QYPlayerViewConflictConstants.h */,
+				77B4ECBA22C8803E00F09B07 /* QYPlayerViewConflictDefine.h */,
+				77B4ECBB22C8803E00F09B07 /* QYPlayerViewConflictDefine.m */,
+				77B4ECBD22C88F5800F09B07 /* QYPlayerConflictViewMessage+internal.h */,
+				77B4ECB522C875DC00F09B07 /* QYPlayerViewConflictManager.h */,
+				77B4ECB622C875DC00F09B07 /* QYPlayerViewConflictManager.m */,
 				77B4ECA222C874F900F09B07 /* ViewController.h */,
 				77B4ECA322C874F900F09B07 /* ViewController.m */,
 				77B4ECA522C874F900F09B07 /* Main.storyboard */,
@@ -141,9 +155,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77B4ECBC22C8803E00F09B07 /* QYPlayerViewConflictDefine.m in Sources */,
 				77B4ECA422C874F900F09B07 /* ViewController.m in Sources */,
 				77B4ECAF22C874FD00F09B07 /* main.m in Sources */,
 				77B4ECA122C874F900F09B07 /* AppDelegate.m in Sources */,
+				77B4ECB722C875DC00F09B07 /* QYPlayerViewConflictManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +302,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 27A282F54N;
 				INFOPLIST_FILE = ViewConflict/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -302,6 +319,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 27A282F54N;
 				INFOPLIST_FILE = ViewConflict/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
