@@ -18,19 +18,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol  QYPlayerViewConflictProtocol <NSObject>
 
+@required
+
+@property(nonatomic,strong)NSString* conflict_showPriority;
+
+//是否正在展示
+-(BOOL)conflict_isShowing;
+
+//隐藏
+-(void)conflict_hide;
+
+//显示
+-(void)conflict_show;
 
 @end
 
-
-@interface QYPlayerConflictViewMessage : NSObject
-
-@property(nonatomic,weak)UIView* currentView;
-@property(nonatomic,assign)QYPlayerView_ShowPriority viewPriority;
-
-//唯一初始化方法
--(id)init;
-
-@end
 
 
 NS_ASSUME_NONNULL_END

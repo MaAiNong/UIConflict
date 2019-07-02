@@ -23,22 +23,6 @@
     // Do any additional setup after loading the view.
     _conflictManager = [[QYPlayerViewConflictManager alloc] init];
     
-    UIView* vw = [[UIView alloc] initWithFrame:self.view.bounds];
-    vmglobal = vw;
-    QYPlayerConflictViewMessage* massage = [[QYPlayerConflictViewMessage alloc] init];
-    massage.currentView = vw;
-    
-    [_conflictManager registView:massage];
-    
-    
-    {
-        UIView* vw = [[UIView alloc] initWithFrame:self.view.bounds];
-        QYPlayerConflictViewMessage* massage = [[QYPlayerConflictViewMessage alloc] init];
-        massage.currentView = vw;
-        
-        [_conflictManager registView:massage];
-    }
-    
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleViewClick:)]];
  
     [self.view addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];

@@ -7,9 +7,10 @@
 //
 
 #import "QYPlayerViewConflictManager.h"
-#import "QYPlayerConflictViewMessage+internal.h"
-@interface QYPlayerViewConflictManager()<QYPlayerConflictViewMessageDelegate>
+@interface QYPlayerViewConflictManager()
 
+@property(nonatomic,strong)NSMapTable* conflictCustom;
+@property(nonatomic,strong)NSHashTable* conflictTable;
 
 @end
 
@@ -17,33 +18,60 @@
 
 -(id)init{
     if (self = [super init]) {
-        self.conflictViews = [NSMapTable weakToStrongObjectsMapTable];
+        self.conflictCustom = [NSMapTable weakToStrongObjectsMapTable];
+        self.conflictTable = [NSHashTable weakObjectsHashTable];
     }
     return self;
 }
 
--(BOOL)canShowView:(QYPlayerConflictViewMessage*)view{
+-(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view customHigherPriority:(NSSet*)HigherPriorities{
     
- 
-    return YES;
+    if ([view conformsToProtocol:@protocol(QYPlayerViewConflictProtocol)]) {
+        
+        if ([HigherPriorities isKindOfClass:[NSSet class]]&& HigherPriorities.count>0) {
+            
+            
+        }
+        else{
+            
+            if (![self.conflictTable containsObject:view]) {
+                [self.conflictTable addObject:view];
+            }
+        }
+        return YES;
+    }else{
+#if DEBUG
+        NSLog(@"view %@ not conformsTo QYPlayerViewConflictProtocol",view);
+        NSLog(@"%@",[NSThread callStackSymbols]);
+        NSLog(@"--------------------------------------------------------");
+#endif
+        return NO;
+        
+    }
 }
 
--(void)registView:(QYPlayerConflictViewMessage*)view{
+-(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view{
     
-    [self.conflictViews setObject:view forKey:view.currentView];
+    return  [self registView:view customHigherPriority:nil];
 }
 
--(void)handleViewShow:(QYPlayerConflictViewMessage*)view{
+-(void)deregistView:(UIView<QYPlayerViewConflictProtocol>*)view{
     
-}
-
--(void)handleViewHide:(QYPlayerConflictViewMessage*)view{
+    [self.conflictTable removeObject:view];
     
 }
 
-#pragma mark -- QYPlayerConflictViewMessageDelegate
--(void)viewDidReleased:(QYPlayerConflictViewMessage *)message{
+-(void)handleViewAffectConflict:(UIView<QYPlayerViewConflictProtocol>*)view{
+    
+    if([view conflict_isShowing]){
+        //隐藏优先级低的
+        
+        
+    }else{
+        //显示优先级低的
+    }
     
 }
+
 
 @end

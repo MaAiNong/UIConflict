@@ -6,9 +6,4 @@
 //  Copyright © 2019 xukaitian. All rights reserved.
 //
 
-#import "QYPlayerViewConflictDefine.h"
-#import "QYPlayerConflictViewMessage+internal.h"
 
-@implementation QYPlayerConflictViewMessage
-
-@end

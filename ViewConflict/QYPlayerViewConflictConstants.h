@@ -17,13 +17,13 @@ typedef enum {
 }QYPlayerConflictType;
 
 
-
+//最上面的优先级最高
 typedef enum {
     
-    QYPlayerView_ShowPriority_0,
-    QYPlayerView_ShowPriority_1,
-    QYPlayerView_ShowPriority_2
+    QYViewPriority_ControlMain,//主播控
+    QYViewPriority_PauseAD,//暂停
+    QYViewPriority_CommonViewAD,//通用浮层
     
-}QYPlayerView_ShowPriority;
+}QYView_ShowPriority;
 
 #endif /* QYPlayerViewConflictConstants_h */
