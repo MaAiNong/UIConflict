@@ -33,6 +33,7 @@
         
         [self.conflictTable removeAllObjects];
         self.conflictConfiguration_higher = configuration;
+        self.conflictConfiguration_lower = [self getLowerRelationshipFromHigher:self.conflictConfiguration_higher];
         
     }else{
 #if DEBUG
@@ -142,8 +143,73 @@
     }
 }
 
--(void)showViewPriorityLowerThan:(QYView_ShowPriority)priority{
+-(void)showViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
     
 }
+
+
+//工具方法
+-(NSDictionary*)getLowerRelationshipFromHigher:(NSDictionary*)higher{
+    if (![higher isKindOfClass:[NSDictionary class]]  || higher.allKeys.count<=0) {
+        return @{};
+    }
+    
+    //1 提取出当前higher里面所有的类型////////////////////////////////////////////////////////////
+    NSMutableSet* lowerAllkeys = [[NSMutableSet alloc] init];
+    if (higher.allKeys.count>0) {
+        [lowerAllkeys addObjectsFromArray:higher.allKeys];
+    }
+    
+    for (NSArray* higherRelation in higher.allValues) {
+        if ([higherRelation isKindOfClass:[NSArray class]]) {
+            for (NSDictionary* conflict in higherRelation) {
+                if ([conflict isKindOfClass:[NSDictionary class]] && conflict.allKeys.count>0) {
+                    [lowerAllkeys addObjectsFromArray:conflict.allKeys];
+                }
+            }
+        }
+    }
+    
+    //2 把所有的 key 按照优先级排序，因为优先级越低，需要遍历的可能性越小 ////////////////////////////////////////////////////////////
+    NSArray *sortedArray = [lowerAllkeys.allObjects sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSNumber *number1 = obj1;
+        NSNumber *number2 = obj2;
+        NSComparisonResult result = [number1 compare:number2];
+        
+        return result == NSOrderedDescending; //升序
+    }];
+    
+    //3 以所有的类型为key 遍历优先级比较低的关系////////////////////////////////////////////////////////////
+    NSMutableDictionary* lower = [[NSMutableDictionary alloc] init];
+    
+    for (NSNumber* lowerKey in sortedArray) {
+        
+        NSMutableArray* lowerValue = [[NSMutableArray alloc] init];
+        
+        [higher enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            NSArray* higherConflicts = obj;
+            if ([higherConflicts isKindOfClass:[NSArray class]]) {
+                for (NSDictionary* conflict in higherConflicts) {
+                    if ([conflict.allKeys containsObject:lowerKey]) {
+                        NSNumber* conflictType = conflict[lowerKey];
+                        if (key&&conflictType) {
+                            NSDictionary* lowerConflict = @{key:conflictType};
+                            [lowerValue addObject:lowerConflict];
+                        }
+                    }
+                }
+            }
+            
+        }];
+        
+        [lower setObject:lowerValue forKey:lowerKey];
+    }
+    
+    return lower;
+    
+}
+
 
 @end

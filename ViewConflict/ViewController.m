@@ -26,6 +26,8 @@
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleViewClick:)]];
  
     [self.view addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
+    
+    [_conflictManager registConflictConfiguration:[[QYConflictViewConfig sharedInstance] mainPlayerConflict]];
 }
 
 -(void)longPress:(id)sender{
