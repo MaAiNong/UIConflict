@@ -13,36 +13,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QYPlayerViewConflictManager : NSObject
 
+//唯一初始化方法
 -(id)init;
 
+//注册需要使用的 QYConflictViewConfig
+-(void)registConflictConfiguration:(NSDictionary*)configuration;
 
 /**
  是否可展示
-
+ 只要与高优先级中的任意一项冲突 就不可展示
  @param view
  @return YES 可以展示 NO 不可以展示
  */
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view;
 
+//  @[
+//@{@(QYViewPriority_RollAD):@(QYViewConflictType_Exclusion)},
+//@{@(QYViewPriority_PauseAD):@(QYViewConflictType_Exclusion)},
+//]
+//检查与特定高优先级view的冲突情况
+-(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view withConflict:(NSArray*)conflicts;
 
 /**
-  不走  QYShowPriority.plist 里的优先级
-  不走  QYShowPriority.plist 里的优先级
-  不走  QYShowPriority.plist 里的优先级
- 
-  根据view实例 定制HigherPriorities 注册需要处理优先级的view
-
- @param view 符合QYPlayerViewConflictProtocol 的view
- @param HigherPriorities 比注册view 优先级更高的view 里面的内容
- @return YES 注册成功; NO 注册失败-不符合QYPlayerViewConflictProtocol
- */
-//-(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view customHigherPriority:(NSSet*)HigherPriorities;
-
-
-/**
- 注册需要处理优先级的view 完全走 QYShowPriority.plist 里的优先级
- 注册需要处理优先级的view 完全走 QYShowPriority.plist 里的优先级
- 注册需要处理优先级的view 完全走 QYShowPriority.plist 里的优先级
+ 注册需要处理优先级的view 完全走 QYConflictViewConfig 里的优先级配置字典
  
  @param view 符合QYPlayerViewConflictProtocol 的view
  @return YES 注册成功; NO 注册失败-不符合QYPlayerViewConflictProtocol
@@ -59,16 +52,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 
  view 显示隐藏发生变化
+ * 内部 会以 [view conflict_isShowing] 为准
+ * 内部 会以 [view conflict_isShowing] 为准
+ * 内部 会以 [view conflict_isShowing] 为准
  
- 在这个方法里面会去取 conflict_isShowing
-     * YES 此view正显示 隐藏互斥优先级低的互斥view
-     * NO  此view正隐藏 可以允许低优先级的互斥view显示
- 
- 其他情况 如 frame调整
- */
--(void)handleViewAffectConflict:(UIView<QYPlayerViewConflictProtocol>*)view;
+ @param view 显隐发生变化的View
+ @param isShow 这个值仅仅
+    * YES 此view正显示 隐藏互斥优先级低的互斥view
+    * NO  此view正隐藏 可以允许低优先级的互斥view显示
+*/
+-(void)handleView:(UIView<QYPlayerViewConflictProtocol>*)view show:(BOOL)isShow;
 
 @end
 

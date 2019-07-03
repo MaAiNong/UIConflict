@@ -34,20 +34,5 @@
 
 -(void)handleViewClick:(id)sender{
     
-    id value;
-    NSEnumerator*  enumerator = [_conflictManager.conflictViews keyEnumerator];
-    while ((value = [enumerator nextObject])) {
-        /* code that acts on the hash table's values */
-        NSLog(@"key %@",value);
-    }
-    
-    {
-        id value;
-        NSEnumerator*  enumerator = [_conflictManager.conflictViews objectEnumerator];
-        while ((value = [enumerator nextObject])) {
-            /* code that acts on the hash table's values */
-            NSLog(@"value %@",value);
-        }
-    }
 }
 @end

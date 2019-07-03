@@ -11,18 +11,19 @@
 
 typedef enum {
     
-    QYPlayerConflictType_Exclusion,
-    QYPlayerConflictType_Intersection,
+    QYViewConflictType_Exclusion,//逻辑互斥
+    QYViewConflictType_Intersection,//UI交错1
     
-}QYPlayerConflictType;
+}QYViewConflict_Type;
 
 
-//最上面的优先级最高
+//按照显示优先级排列，由上到下，优先级递减
 typedef enum {
-    
-    QYViewPriority_ControlMain,//主播控
+
+    QYViewPriority_RollAD,//贴片
     QYViewPriority_PauseAD,//暂停
     QYViewPriority_CommonViewAD,//通用浮层
+    QYViewPriority_ReadyBuyOverlay,//随视购小浮层
     
 }QYView_ShowPriority;
 
