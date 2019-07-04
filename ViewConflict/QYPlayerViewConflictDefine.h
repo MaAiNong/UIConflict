@@ -29,20 +29,20 @@ NS_ASSUME_NONNULL_BEGIN
 //是否正在展示
 -(BOOL)conflict_isShowing;
 
-//隐藏
--(void)conflict_hide:(QYConflictReason*)hideReason;
+//由配置表优先级判断该view应该隐藏 正常情况下处理完成后 conflict_isShowing 为NO,hideReason仅供参考
+-(void)conflict_hide:(nullable QYConflictReason*)hideReason;
 
-//显示
--(void)conflict_show:(QYConflictReason*)hideReason;
+//由配置表优先级判断改view应该显示 正常情况下处理完成后 conflict_isShowing 为YES,showReason仅供参考
+-(void)conflict_show:(nullable QYConflictReason*)showReason;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////
+
 @interface QYConflictReason : NSObject
 
 @property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;//导致隐藏的view类型
 @property(nonatomic,assign)QYView_ConflictType conflict_Type;//导致隐藏的冲突类型
-@property(nonatomic,weak)QYPlayerViewConflictManager* conflict_manager;//manager
 
 @end
 

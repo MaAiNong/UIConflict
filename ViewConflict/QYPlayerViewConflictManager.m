@@ -144,7 +144,15 @@
         else{
             
             if (![self.conflictTable containsObject:view]) {
+                
                 [self.conflictTable addObject:view];
+                
+                if ([self canShowView:view]) {
+                    
+                    [self showView:view withReason:nil];
+                }else{
+                    [self hideView:view withReason:nil];
+                }
             }
         }
         return YES;
@@ -176,24 +184,46 @@
 
 -(void)deregistView:(UIView<QYPlayerViewConflictProtocol>*)view{
     
-    [self.conflictTable removeObject:view];
+    if (![self isRegistedView:view]) {
+        return;
+    }
     
+    [self.conflictTable removeObject:view];
+    //显示优先级低的
+    [self showViewPriorityLowerThan:view];
+}
+
+/**
+ view 显示隐藏发生变化 通知其他view
+ 通过 [view conflict_isShowing] 来判断当前是显示还是隐藏
+ */
+-(void)notifyOtherViewsShowStatusChanged:(UIView<QYPlayerViewConflictProtocol>*)view{
+    if (!view) {
+        return;
+    }
+    if (![self isRegistedView:view]) {
+#if DEBUG
+        NSLog(@"view %@ 没有注册",view);
+        NSLog(@"%@",[NSThread callStackSymbols]);
+        NSAssert(NO,@"view is not registed",nil);
+#endif
+        return;
+    }
+    [self updateViewConflictsForChange:view];
 }
 
 - (void)handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
     
-    if([self registView:view]){//如果没有注册主动给注册一下 顺便做一下检查,新注册会自动处理 updateViewConflicts
-        BOOL isValid = ([view conflict_isShowing]==isShow);
-        if(!isValid){
+    BOOL isValid = ([view conflict_isShowing]==isShow);
+    if(!isValid){
 #if DEBUG
-            NSLog(@"show message not equal %@",@(isShow));
-            NSLog(@"%@",[NSThread callStackSymbols]);
-            NSAssert(isValid,@"show message not equal",nil);
+        NSLog(@"show message not equal %@",@(isShow));
+        NSLog(@"%@",[NSThread callStackSymbols]);
+        NSAssert(isValid,@"show message not equal",nil);
 #endif
-            return;
-        }
-        [self updateViewConflictsForChange:view];
+        return;
     }
+    [self updateViewConflictsForChange:view];
 
 }
 
@@ -212,11 +242,6 @@
         //显示优先级低的
         [self showViewPriorityLowerThan:view];
     }
-}
-
--(void)updateShowHideStatusForArray:(NSArray<QYPlayerViewConflictProtocol> *)views{
-    
-    
 }
 
 -(void)updateShowHideStatusForView:(UIView<QYPlayerViewConflictProtocol> *)view
@@ -243,24 +268,17 @@
 
 -(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
         [view conflict_show:reason];
-        
+    
         [self handleView:view show:YES];
-        
-    });
+
 }
 
 -(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
         [view conflict_hide:reason];
-        
+    
         [self handleView:view show:NO];
-        
-    });
 }
 
 #pragma mark --- handle PriorityLower
@@ -288,7 +306,7 @@
                     
                         NSLog(@"%@ 显示view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
 
-                        [self showView:view withReason:CONFLICT_REASON(view.conflict_showPriority, confictType)];
+                        [self showView:conflictView withReason:CONFLICT_REASON(view.conflict_showPriority, confictType)];
                     }
                 }
             }
@@ -352,7 +370,6 @@
     
     reason.conflict_showPriority = pri;
     reason.conflict_Type = type;
-    reason.conflict_manager = self;
     
     return reason;
 }
@@ -380,7 +397,7 @@
             
         }else if(QYViewConflictType_Intersection == conflictType){
             CGRect view1rect = [view1 convertRect:view1.bounds toView:[UIApplication sharedApplication].keyWindow];
-            CGRect view2rect = [view1 convertRect:view2.bounds toView:[UIApplication sharedApplication].keyWindow];
+            CGRect view2rect = [view2 convertRect:view2.bounds toView:[UIApplication sharedApplication].keyWindow];
             if (CGRectIntersectsRect(view1rect, view2rect)) {
 #if DEBUG
                 NSLog(@"view conflict QYViewConflictType_Intersection %@ %@",view1,view2);
