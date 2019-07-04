@@ -29,15 +29,17 @@ static QYConflictViewConfig* _sharedConfiguration;
     else{
         _mainPlayerConflictConfiguration =
         @{
-            @(QYViewPriority_CommonViewAD):@[
-                                            @{@(QYViewPriority_RollAD):@(QYViewConflictType_Exclusion)},
-                                            @{@(QYViewPriority_PauseAD):@(QYViewConflictType_Exclusion)},
-                                        ],
-            
-            @(QYViewPriority_ReadyBuyOverlay):@[
-                                            @{@(QYViewPriority_RollAD):@(QYViewConflictType_Exclusion)},
-                                            @{@(QYViewPriority_CommonViewAD):@(QYViewConflictType_Intersection)},
-                                        ],
+          @(QYViewPriority_CommonViewAD):
+  @[
+  @{KEY_PRIORITY:@(QYViewPriority_RollAD),KEY_CONFLICT:@(QYViewConflictType_Exclusion)},
+  @{KEY_PRIORITY:@(QYViewPriority_PauseAD),KEY_CONFLICT:@(QYViewConflictType_Exclusion)},
+  ],
+          
+          @(QYViewPriority_ReadyBuyOverlay):
+  @[
+  @{KEY_PRIORITY:@(QYViewPriority_RollAD),KEY_CONFLICT:@(QYViewConflictType_Exclusion)},
+  @{KEY_PRIORITY:@(QYViewPriority_CommonViewAD),KEY_CONFLICT:@(QYViewConflictType_Intersection)},
+  ],
         };
         
         return _mainPlayerConflictConfiguration;
@@ -46,8 +48,37 @@ static QYConflictViewConfig* _sharedConfiguration;
 
 //检验是否配置是否符合基本标准
 +(BOOL)isValidConflictConfig:(NSDictionary*)conflicts{
- 
-    return YES;
+    __block BOOL isValid = YES;
+    if(conflicts&&[conflicts isKindOfClass:[NSDictionary class]]){
+        [conflicts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            NSArray* value = obj;
+            if ([value isKindOfClass:[NSArray class]]) {
+                for (NSDictionary* cur_conflict in value) {
+                    if ([cur_conflict isKindOfClass:[NSDictionary class]]) {
+                        QYView_ShowPriority cur_priority = [[cur_conflict objectForKey:KEY_PRIORITY] intValue];
+                        if (cur_priority>=[key intValue]) {
+                            isValid = NO;
+                            *stop = YES;
+                        }
+                    }else{
+                        isValid = NO;
+                        *stop = YES;
+                    }
+                }
+            }
+            else{
+                isValid = NO;
+                *stop = YES;
+            }
+        }];
+    }
+    return isValid;
 }
+
+@end
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation QYConflictReason
+
 
 @end

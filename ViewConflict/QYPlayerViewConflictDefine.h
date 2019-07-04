@@ -11,6 +11,8 @@
 #import "QYPlayerViewConflictConstants.h"
 NS_ASSUME_NONNULL_BEGIN
 
+@class QYConflictReason;
+@class QYPlayerViewConflictManager;
 @protocol  QYPlayerViewConflictDelegate <NSObject>
 
 
@@ -28,10 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)conflict_isShowing;
 
 //隐藏
--(void)conflict_hide;
+-(void)conflict_hide:(QYConflictReason*)hideReason;
 
 //显示
--(void)conflict_show;
+-(void)conflict_show:(QYConflictReason*)hideReason;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////
+@interface QYConflictReason : NSObject
+
+@property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;//导致隐藏的view类型
+@property(nonatomic,assign)QYView_ConflictType conflict_Type;//导致隐藏的冲突类型
+@property(nonatomic,weak)QYPlayerViewConflictManager* conflict_manager;//manager
 
 @end
 
@@ -45,7 +56,16 @@ NS_ASSUME_NONNULL_BEGIN
 //字典的值 为 数组，数组内容为 高优先级UI类型 以及 冲突方式 QYPlayerConflictType
 -(NSDictionary*)mainPlayerConflict;
 
-//检验是否配置是否符合基本标准
+
+/**
+ 检验是否配置是否符合基本标准
+
+ 表中不能出现环形依赖，否则会形成检查死锁
+ 必须严格遵守，key 的优先级 < value优先级
+ 
+ @param conflicts 配置表
+ @return YES 符合 NO 不符合
+ */
 +(BOOL)isValidConflictConfig:(NSDictionary*)conflicts;
 
 @end

@@ -9,12 +9,15 @@
 #ifndef QYPlayerViewConflictConstants_h
 #define QYPlayerViewConflictConstants_h
 
+#define KEY_PRIORITY @"KEY_PRIORITY"
+#define KEY_CONFLICT @"KEY_CONFLICT"
+
 typedef enum {
-    
+    QYViewConflictType_Unknown=-1,
     QYViewConflictType_Exclusion,//逻辑互斥
     QYViewConflictType_Intersection,//UI交错1
     
-}QYViewConflict_Type;
+}QYView_ConflictType;
 
 
 //按照显示优先级排列，由上到下，优先级递减

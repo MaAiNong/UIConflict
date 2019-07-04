@@ -16,23 +16,19 @@ NS_ASSUME_NONNULL_BEGIN
 //唯一初始化方法
 -(id)init;
 
+//销毁
+-(void)destroy;
+
 //注册需要使用的 QYConflictViewConfig
 -(void)registConflictConfiguration:(NSDictionary*)configuration;
 
 /**
  是否可展示
  只要与高优先级中的任意一项冲突 就不可展示
- @param view
+ @param view 
  @return YES 可以展示 NO 不可以展示
  */
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view;
-
-//  @[
-//@{@(QYViewPriority_RollAD):@(QYViewConflictType_Exclusion)},
-//@{@(QYViewPriority_PauseAD):@(QYViewConflictType_Exclusion)},
-//]
-//检查与特定高优先级view的冲突情况
--(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view withConflict:(NSArray*)conflicts;
 
 /**
  注册需要处理优先级的view 完全走 QYConflictViewConfig 里的优先级配置字典
@@ -53,9 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  view 显示隐藏发生变化
- * 内部 会以 [view conflict_isShowing] 为准
- * 内部 会以 [view conflict_isShowing] 为准
- * 内部 会以 [view conflict_isShowing] 为准
+ * 内部 会以 [view conflict_isShowing] 为准，如果和isShow不一致，会直接return
+ * 内部 会以 [view conflict_isShowing] 为准，如果和isShow不一致，会直接return
+ * 内部 会以 [view conflict_isShowing] 为准，如果和isShow不一致，会直接return
  
  @param view 显隐发生变化的View
  @param isShow 这个值仅仅
