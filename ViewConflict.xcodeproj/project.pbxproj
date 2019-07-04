@@ -15,6 +15,10 @@
 		77B4ECAF22C874FD00F09B07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECAE22C874FD00F09B07 /* main.m */; };
 		77B4ECB722C875DC00F09B07 /* QYPlayerViewConflictManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECB622C875DC00F09B07 /* QYPlayerViewConflictManager.m */; };
 		77B4ECBC22C8803E00F09B07 /* QYPlayerViewConflictDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECBB22C8803E00F09B07 /* QYPlayerViewConflictDefine.m */; };
+		77CA5E8C22CDDB8300464891 /* QYPreadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5E8B22CDDB8300464891 /* QYPreadView.m */; };
+		77CA5EAC22CDE36A00464891 /* QYReadyBuyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */; };
+		77CA5EAD22CDE36A00464891 /* QYPauseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAB22CDE36A00464891 /* QYPauseView.m */; };
+		77CA5EB022CDE42700464891 /* QYCommonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAF22CDE42700464891 /* QYCommonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +37,14 @@
 		77B4ECB822C87D4E00F09B07 /* QYPlayerViewConflictConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QYPlayerViewConflictConstants.h; path = ../QYPlayerViewConflictConstants.h; sourceTree = "<group>"; };
 		77B4ECBA22C8803E00F09B07 /* QYPlayerViewConflictDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QYPlayerViewConflictDefine.h; path = ../QYPlayerViewConflictDefine.h; sourceTree = "<group>"; };
 		77B4ECBB22C8803E00F09B07 /* QYPlayerViewConflictDefine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = QYPlayerViewConflictDefine.m; path = ../QYPlayerViewConflictDefine.m; sourceTree = "<group>"; };
+		77CA5E8A22CDDB8300464891 /* QYPreadView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPreadView.h; sourceTree = "<group>"; };
+		77CA5E8B22CDDB8300464891 /* QYPreadView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYPreadView.m; sourceTree = "<group>"; };
+		77CA5EA822CDE36A00464891 /* QYReadyBuyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYReadyBuyView.h; sourceTree = "<group>"; };
+		77CA5EA922CDE36A00464891 /* QYPuaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYPuaseView.h; sourceTree = "<group>"; };
+		77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYReadyBuyView.m; sourceTree = "<group>"; };
+		77CA5EAB22CDE36A00464891 /* QYPauseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYPauseView.m; sourceTree = "<group>"; };
+		77CA5EAE22CDE42700464891 /* QYCommonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYCommonView.h; sourceTree = "<group>"; };
+		77CA5EAF22CDE42700464891 /* QYCommonView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYCommonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +82,7 @@
 				77F997A622CDD979007CE27D /* QYConflict */,
 				77B4ECA222C874F900F09B07 /* ViewController.h */,
 				77B4ECA322C874F900F09B07 /* ViewController.m */,
+				77CA5E8922CDDB6700464891 /* DEMO */,
 				77B4ECA522C874F900F09B07 /* Main.storyboard */,
 				77B4ECA822C874FD00F09B07 /* Assets.xcassets */,
 				77B4ECAA22C874FD00F09B07 /* LaunchScreen.storyboard */,
@@ -77,6 +90,21 @@
 				77B4ECAE22C874FD00F09B07 /* main.m */,
 			);
 			path = ViewConflict;
+			sourceTree = "<group>";
+		};
+		77CA5E8922CDDB6700464891 /* DEMO */ = {
+			isa = PBXGroup;
+			children = (
+				77CA5E8A22CDDB8300464891 /* QYPreadView.h */,
+				77CA5E8B22CDDB8300464891 /* QYPreadView.m */,
+				77CA5EA922CDE36A00464891 /* QYPuaseView.h */,
+				77CA5EAB22CDE36A00464891 /* QYPauseView.m */,
+				77CA5EAE22CDE42700464891 /* QYCommonView.h */,
+				77CA5EAF22CDE42700464891 /* QYCommonView.m */,
+				77CA5EA822CDE36A00464891 /* QYReadyBuyView.h */,
+				77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */,
+			);
+			path = DEMO;
 			sourceTree = "<group>";
 		};
 		77F997A622CDD979007CE27D /* QYConflict */ = {
@@ -162,10 +190,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				77B4ECBC22C8803E00F09B07 /* QYPlayerViewConflictDefine.m in Sources */,
+				77CA5EB022CDE42700464891 /* QYCommonView.m in Sources */,
 				77B4ECA422C874F900F09B07 /* ViewController.m in Sources */,
 				77B4ECAF22C874FD00F09B07 /* main.m in Sources */,
+				77CA5E8C22CDDB8300464891 /* QYPreadView.m in Sources */,
+				77CA5EAC22CDE36A00464891 /* QYReadyBuyView.m in Sources */,
 				77B4ECA122C874F900F09B07 /* AppDelegate.m in Sources */,
 				77B4ECB722C875DC00F09B07 /* QYPlayerViewConflictManager.m in Sources */,
+				77CA5EAD22CDE36A00464891 /* QYPauseView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

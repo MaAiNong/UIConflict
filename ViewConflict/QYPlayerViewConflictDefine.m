@@ -40,7 +40,11 @@ static QYConflictViewConfig* _sharedConfiguration;
   @{KEY_PRIORITY:@(QYViewPriority_RollAD),KEY_CONFLICT:@(QYViewConflictType_Exclusion)},
   @{KEY_PRIORITY:@(QYViewPriority_CommonViewAD),KEY_CONFLICT:@(QYViewConflictType_Intersection)},
   ],
-        };
+          @(QYViewPriority_PauseAD):
+    @[
+      @{KEY_PRIORITY:@(QYViewPriority_RollAD),KEY_CONFLICT:@(QYViewConflictType_Exclusion)}
+    ],
+          };
         
         return _mainPlayerConflictConfiguration;
     }

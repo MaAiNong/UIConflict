@@ -15,14 +15,14 @@
 typedef enum {
     QYViewConflictType_Unknown=-1,
     QYViewConflictType_Exclusion,//逻辑互斥
-    QYViewConflictType_Intersection,//UI交错1
+    QYViewConflictType_Intersection,//UI交错,这种情况要求view必须有父view
     
 }QYView_ConflictType;
 
 
 //按照显示优先级排列，由上到下，优先级递减
 typedef enum {
-
+    QYViewPriority_Unknow = 0,//未知 不处理
     QYViewPriority_RollAD,//贴片
     QYViewPriority_PauseAD,//暂停
     QYViewPriority_CommonViewAD,//通用浮层

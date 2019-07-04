@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  是否可展示
  只要与高优先级中的任意一项冲突 就不可展示
- @param view 
+ @param view  view 
  @return YES 可以展示 NO 不可以展示
  */
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view;
@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES 注册成功; NO 注册失败-不符合QYPlayerViewConflictProtocol
  */
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view;
+
+
+-(void)registViews:(NSArray<QYPlayerViewConflictProtocol>*)views;
 
 
 /**
@@ -59,6 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
     * NO  此view正隐藏 可以允许低优先级的互斥view显示
 */
 -(void)handleView:(UIView<QYPlayerViewConflictProtocol>*)view show:(BOOL)isShow;
+
+
+-(void)updateShowHideStatusForView:(UIView<QYPlayerViewConflictProtocol> *)view;
+
+-(void)updateShowHideStatusForArray:(NSArray<QYPlayerViewConflictProtocol> *)views;
 
 @end
 
