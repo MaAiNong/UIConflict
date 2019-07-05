@@ -11,7 +11,7 @@
 #import "QYPlayerViewConflictDefine.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QYReadyBuyView : UIView<QYPlayerViewConflictProtocol>
+@interface QYReadyBuyView : UILabel<QYPlayerViewConflictProtocol>
 
 @property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;
 

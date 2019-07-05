@@ -11,7 +11,7 @@
 #import "QYPlayerViewConflictDefine.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QYCommonView : UIView<QYPlayerViewConflictProtocol>
+@interface QYCommonView : UILabel<QYPlayerViewConflictProtocol>
 @property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;
 
 //是否正在展示

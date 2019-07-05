@@ -23,11 +23,11 @@
 
 @implementation ViewController{
     QYPlayerViewConflictManager* _conflictManager;
-    UIView<QYPlayerViewConflictProtocol>* _vwRoll;
-    UIView<QYPlayerViewConflictProtocol>* _vwPause;
-    UIView<QYPlayerViewConflictProtocol>* _vwCommon;
-    UIView<QYPlayerViewConflictProtocol>* _vwReadyBuy;
-    UIView<QYPlayerViewConflictProtocol>* _vwReadyBuy2;
+    QYPreadView* _vwRoll;
+    QYPuaseView* _vwPause;
+    QYCommonView* _vwCommon;
+    QYReadyBuyView* _vwReadyBuy;
+    QYReadyBuyView* _vwReadyBuy2;
 }
 
 - (void)viewDidLoad {
@@ -36,6 +36,7 @@
     //注册需要处理的View
     {
         QYPreadView* preadView = [[QYPreadView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        [preadView setText:@"贴片"];
         [self.view addSubview:preadView];preadView.backgroundColor = [UIColor redColor];
         preadView.conflict_showPriority = QYViewPriority_RollAD;//可以放在 QYPreadView 的初始化口里面
         _vwRoll = preadView;
@@ -46,6 +47,7 @@
         QYPuaseView* pause = [[QYPuaseView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-100, 100, 100)];
         [self.view addSubview:pause];pause.backgroundColor = [UIColor orangeColor];
         pause.conflict_showPriority = QYViewPriority_PauseAD;//可以放在 QYPuaseView 的初始化口里面
+        [pause setText:@"暂停"];
         _vwPause = pause;
     }
     
@@ -54,6 +56,7 @@
         QYCommonView* view= [[QYCommonView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, self.view.bounds.size.height-100, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor yellowColor];
         view.conflict_showPriority = QYViewPriority_CommonViewAD;//可以放在 QYCommonView 的初始化口里面
+        [view setText:@"浮层"];
         _vwCommon = view;
     }
     
@@ -62,6 +65,7 @@
         QYReadyBuyView* view= [[QYReadyBuyView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100,0, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor greenColor];
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
+        [view setText:@"随视购"];
         _vwReadyBuy = view;
     }
     
@@ -70,6 +74,7 @@
         QYReadyBuyView* view= [[QYReadyBuyView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100-50, self.view.bounds.size.height-100-50, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor greenColor];
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
+        [view setText:@"随视购"];
         _vwReadyBuy2 = view;
     }
     
