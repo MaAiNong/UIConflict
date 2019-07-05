@@ -7,6 +7,7 @@
 //
 
 #import "QYPlayerViewConflictDefine.h"
+#import "QYPlayerViewConflictConstants.h"
 static QYConflictViewConfig* _sharedConfiguration;
 @implementation QYConflictViewConfig
 {
@@ -52,30 +53,32 @@ static QYConflictViewConfig* _sharedConfiguration;
 
 //检验是否配置是否符合基本标准
 +(BOOL)isValidConflictConfig:(NSDictionary*)conflicts{
+    
+    if(!conflicts || ![conflicts isKindOfClass:[NSDictionary class]])
+        return NO;
     __block BOOL isValid = YES;
-    if(conflicts&&[conflicts isKindOfClass:[NSDictionary class]]){
-        [conflicts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            NSArray* value = obj;
-            if ([value isKindOfClass:[NSArray class]]) {
-                for (NSDictionary* cur_conflict in value) {
-                    if ([cur_conflict isKindOfClass:[NSDictionary class]]) {
-                        QYView_ShowPriority cur_priority = [[cur_conflict objectForKey:KEY_PRIORITY] intValue];
-                        if (cur_priority>=[key intValue]) {
-                            isValid = NO;
-                            *stop = YES;
-                        }
-                    }else{
+    [conflicts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSArray* value = obj;
+        if ([value isKindOfClass:[NSArray class]]) {
+            for (NSDictionary* cur_conflict in value) {
+                if ([cur_conflict isKindOfClass:[NSDictionary class]] &&  cur_conflict[KEY_PRIORITY] && cur_conflict[KEY_CONFLICT]) {
+                    QYView_ShowPriority cur_priority = [[cur_conflict objectForKey:KEY_PRIORITY] intValue];
+                    if (cur_priority>=[key intValue]) {
                         isValid = NO;
                         *stop = YES;
                     }
+                }else{
+                    isValid = NO;
+                    *stop = YES;
                 }
             }
-            else{
-                isValid = NO;
-                *stop = YES;
-            }
-        }];
-    }
+        }
+        else{
+            isValid = NO;
+            *stop = YES;
+        }
+    }];
+    
     return isValid;
 }
 
