@@ -80,8 +80,6 @@
 				77B4EC9F22C874F900F09B07 /* AppDelegate.h */,
 				77B4ECA022C874F900F09B07 /* AppDelegate.m */,
 				77F997A622CDD979007CE27D /* QYConflict */,
-				77B4ECA222C874F900F09B07 /* ViewController.h */,
-				77B4ECA322C874F900F09B07 /* ViewController.m */,
 				77CA5E8922CDDB6700464891 /* DEMO */,
 				77B4ECA522C874F900F09B07 /* Main.storyboard */,
 				77B4ECA822C874FD00F09B07 /* Assets.xcassets */,
@@ -95,6 +93,8 @@
 		77CA5E8922CDDB6700464891 /* DEMO */ = {
 			isa = PBXGroup;
 			children = (
+				77B4ECA222C874F900F09B07 /* ViewController.h */,
+				77B4ECA322C874F900F09B07 /* ViewController.m */,
 				77CA5E8A22CDDB8300464891 /* QYPreadView.h */,
 				77CA5E8B22CDDB8300464891 /* QYPreadView.m */,
 				77CA5EA922CDE36A00464891 /* QYPuaseView.h */,

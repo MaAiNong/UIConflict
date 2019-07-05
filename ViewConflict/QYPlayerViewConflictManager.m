@@ -30,6 +30,7 @@
 
 //销毁
 -(void)destroy{
+@synchronized (self) {
     if(_conflictTable){
         [_conflictTable removeAllObjects];
         _conflictTable = nil;
@@ -41,9 +42,11 @@
         _conflictConfiguration_lower = nil;
     }
 }
+}
 
 //注册需要使用的 QYConflictViewConfig
 -(void)registConflictConfiguration:(NSDictionary*)configuration{
+@synchronized (self) {
     if (configuration&&[QYConflictViewConfig isValidConflictConfig:configuration]) {
         
         [self.conflictTable removeAllObjects];
@@ -59,6 +62,7 @@
 #endif
     }
 }
+}
 
 
 /**
@@ -68,12 +72,20 @@
  @return YES 可以展示 NO 不可以展示
  */
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view{
-    
+@synchronized (self) {
+    if (![self isRegistedView:view]) {
+        NSLog(@"canShowView:%@ not registed",view);
+        return NO;
+    }
+    if(QYViewPriority_Unknow == view.conflict_showPriority){
+        NSLog(@"canShowView:%@ Priority QYViewPriority_Unknow",view);
+        return YES;
+    }
     return [self canShowView:view conflictType:NULL priority:NULL];
+}
 }
 
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view conflictType:(int*)conflictTypeRef priority:(int*)priorityRef{
-    
     BOOL canShowView = YES;
     if(self.conflictConfiguration_higher.count>0){
         NSArray* higherConflicts = [self.conflictConfiguration_higher objectForKey:@(view.conflict_showPriority)];
@@ -81,6 +93,9 @@
             
             for (NSDictionary* conflict in higherConflicts) {
                 QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
+                if (QYViewPriority_Unknow == viewPriority) {
+                    continue;
+                }
                 QYView_ConflictType confictType = [conflict[KEY_CONFLICT] intValue];
                 
                 NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
@@ -169,11 +184,13 @@
 }
 
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view{
-    
+@synchronized (self) {
     return  [self registView:view customHigherPriority:nil];
+}
 }
 
 -(void)registViews:(NSArray<QYPlayerViewConflictProtocol> *)views{
+@synchronized (self) {
     if (![views isKindOfClass:[NSArray class]]) {
         return;
     }
@@ -181,9 +198,10 @@
         [self registView:view];
     }
 }
+}
 
 -(void)deregistView:(UIView<QYPlayerViewConflictProtocol>*)view{
-    
+@synchronized (self) {
     if (![self isRegistedView:view]) {
         return;
     }
@@ -192,12 +210,14 @@
     //显示优先级低的
     [self showViewPriorityLowerThan:view];
 }
+}
 
 /**
  view 显示隐藏发生变化 通知其他view
  通过 [view conflict_isShowing] 来判断当前是显示还是隐藏
  */
 -(void)notifyOtherViewsShowStatusChanged:(UIView<QYPlayerViewConflictProtocol>*)view{
+@synchronized (self) {
     if (!view) {
         return;
     }
@@ -210,6 +230,7 @@
         return;
     }
     [self updateViewConflictsForChange:view];
+}
 }
 
 - (void)handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
@@ -284,7 +305,6 @@
 #pragma mark --- handle PriorityLower
 //显示优先级低的view
 -(void)showViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
-    
     if (self.conflictTable.count>0 && [self.conflictConfiguration_lower isKindOfClass:[NSDictionary class]]) {
         //遍历出低优先级的View 然后判断他们能不能显示
         NSArray* conflicts = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
@@ -292,6 +312,9 @@
             
             for (NSDictionary* conflict in conflicts) {
                 QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
+                if (QYViewPriority_Unknow == viewPriority) {
+                    continue;
+                }
                 QYView_ConflictType confictType = [conflict[KEY_CONFLICT] intValue];
                 
                 NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
@@ -326,7 +349,6 @@
 
 //通知低优先级view隐藏
 -(void)hideViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
-    
     if (self.conflictTable.count>0 && [self.conflictConfiguration_lower isKindOfClass:[NSDictionary class]]) {
         
         NSArray* conflicts = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
@@ -334,6 +356,9 @@
             
             for (NSDictionary* conflict in conflicts) {
                 QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
+                if (QYViewPriority_Unknow == viewPriority) {
+                    continue;
+                }
                 QYView_ConflictType confictType = [conflict[KEY_CONFLICT] intValue];
                 
                 NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
