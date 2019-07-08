@@ -7,6 +7,7 @@
 //
 
 #import "QYPlayerViewConflictManager.h"
+#import "NSObject+YYAddForKVO.h"
 @interface QYPlayerViewConflictManager()
 
 //@property(nonatomic,strong)NSMapTable* conflictCustom;
@@ -146,17 +147,18 @@
     if ([view isKindOfClass:[UIView class]]&&[view conformsToProtocol:@protocol(QYPlayerViewConflictProtocol)]) {
         
         if ([HigherPriorities isKindOfClass:[NSSet class]]&& HigherPriorities.count>0) {
-            
-            
+            //预留接口 暂时不动
         }
         else{
             
             if (![self.conflictTable containsObject:view]) {
                 
                 [self.conflictTable addObject:view];
+                if (![self isManuallyView:view]) {
+                    [self registKVOForView:view];
+                }
                 
                 if ([self canShowView:view]) {
-                    
                     [self showView:view withReason:nil];
                 }else{
                     [self hideView:view withReason:nil];
@@ -174,6 +176,43 @@
         return NO;
         
     }
+}
+
+
+-(void)registKVOForView:(UIView<QYPlayerViewConflictProtocol>*)view{
+    
+    __weak UIView<QYPlayerViewConflictProtocol>* wkview = view;
+    [view addObserverBlockForKeyPath:@"hidden" block:^(id  _Nonnull obj, id  _Nonnull oldVal, id  _Nonnull newVal) {
+        if ([oldVal boolValue] != [newVal boolValue]) {
+            [self handleView:wkview show:![newVal boolValue]];
+        }
+    }];
+    
+    [view addObserverBlockForKeyPath:@"alpha" block:^(id  _Nonnull obj, id  _Nonnull oldVal, id  _Nonnull newVal) {
+        if ([oldVal floatValue] != [newVal floatValue]) {
+            if(0.0f == [oldVal floatValue] || 0.0f == [newVal floatValue]){
+                [self handleView:wkview show:(0.0f == [oldVal floatValue])];
+            }
+        }
+    }];
+    
+    [view addObserverBlockForKeyPath:@"superview" block:^(id  _Nonnull obj, id  _Nonnull oldVal, id  _Nonnull newVal) {
+        if (oldVal != newVal && (nil == oldVal || nil == newVal)) {
+            [self handleView:wkview show:(nil == oldVal)];
+        }
+    }];
+
+    [view addObserverBlockForKeyPath:@"frame" block:^(id  _Nonnull obj, id  _Nonnull oldVal, id  _Nonnull newVal) {
+        if (!CGRectEqualToRect([oldVal CGRectValue], [newVal CGRectValue])){
+            if(CGRectEqualToRect(CGRectZero, [oldVal CGRectValue]) || CGRectEqualToRect(CGRectZero, [newVal CGRectValue])){
+                [self handleView:wkview show:CGRectEqualToRect(CGRectZero, [oldVal CGRectValue])];
+            }
+            else if([self existIntersectionConflictForView:wkview]){
+                [self updateViewConflictsForChange:wkview];
+            }
+        }
+    }];
+    
 }
 
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view{
@@ -227,7 +266,7 @@
 }
 
 - (void)handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
-    
+@synchronized (self) {
     BOOL isValid = ([view conflict_isShowing]==isShow);
     if(!isValid){
 #if DEBUG
@@ -238,61 +277,47 @@
         return;
     }
     [self updateViewConflictsForChange:view];
+}
 
 }
 
 -(void)updateViewConflictsForChange:(UIView<QYPlayerViewConflictProtocol> *)view{
-    
-#if DEBUG
-    NSLog(@"updateViewConflicts %@ %@",@(view.conflict_showPriority),@([view conflict_isShowing]));
-    NSLog(@"%@",[NSThread callStackSymbols]);
-#endif
-    
-    if([view conflict_isShowing]){
-        //隐藏优先级低的
-        [self hideViewPriorityLowerThan:view];
+    @synchronized (self){
+    #if DEBUG
+        NSLog(@"updateViewConflicts %@ %@",@(view.conflict_showPriority),@([view conflict_isShowing]));
+        NSLog(@"%@",[NSThread callStackSymbols]);
+    #endif
         
-    }else{
-        //显示优先级低的
-        [self showViewPriorityLowerThan:view];
+        if([view conflict_isShowing]){
+            //隐藏优先级低的
+            [self hideViewPriorityLowerThan:view];
+            
+        }else{
+            //显示优先级低的
+            [self showViewPriorityLowerThan:view];
+        }
     }
 }
 
--(void)updateShowHideStatusForView:(UIView<QYPlayerViewConflictProtocol> *)view
-{
-    if (![self registView:view]) {
-        return;
-    }
-    
-    BOOL currentShow = [view conflict_isShowing];
-    BOOL canShow = [self canShowView:view];
-    if (currentShow && !canShow) {
-        
-        [self hideView:view withReason:CONFLICT_REASON(QYViewConflictType_Unknown, QYViewConflictType_Unknown)];
-        return;
-    }
-    
-    if (!currentShow && canShow) {
-        
-        [self showView:view withReason:CONFLICT_REASON(QYViewConflictType_Unknown, QYViewConflictType_Unknown)];
-        
-        return;
-    }
-}
 
 -(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
         [view conflict_show:reason];
     
-        [self handleView:view show:YES];
+        if([self isManuallyView:view])
+        {
+            [self handleView:view show:YES];
+        }
 
 }
 
 -(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
         [view conflict_hide:reason];
-    
-        [self handleView:view show:NO];
+        if([self isManuallyView:view])
+        {
+            [self handleView:view show:NO];
+        }
 }
 
 #pragma mark --- handle PriorityLower
@@ -498,5 +523,47 @@
     
 }
 
+//是否有交互conflict
+-(BOOL)existIntersectionConflictForView:(UIView<QYPlayerViewConflictProtocol> *)view
+{
+    @synchronized (self){
+        BOOL result = NO;
+        
+        if (!result) {
+            NSArray* lower = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
+            if (lower && [lower isKindOfClass:[NSArray class]]) {
+                for (NSDictionary* conflict in lower) {
+                    QYView_ConflictType conflicttype = [[conflict objectForKey:KEY_CONFLICT] intValue];
+                    if (QYViewConflictType_Intersection == conflicttype) {
+                        result = YES;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (!result) {
+            NSArray* higher = [self.conflictConfiguration_higher objectForKey:@(view.conflict_showPriority)];
+            if (higher && [higher isKindOfClass:[NSArray class]]) {
+                for (NSDictionary* conflict in higher) {
+                    QYView_ConflictType conflicttype = [[conflict objectForKey:KEY_CONFLICT] intValue];
+                    if (QYViewConflictType_Intersection == conflicttype) {
+                        result = YES;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+}
 
+-(BOOL)isManuallyView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    
+    if([view respondsToSelector:@selector(manuallyNotifyShowStatusChange)] && [view manuallyNotifyShowStatusChange]){
+        return YES;
+    }
+    return NO;
+}
 @end

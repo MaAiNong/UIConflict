@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 //由配置表优先级判断改view应该显示 正常情况下处理完成后 conflict_isShowing 为YES,showReason仅供参考
 -(void)conflict_show:(nullable QYConflictReason*)showReason;
 
+@optional
+//手动通知显示状态变化，不实现或者返回NO 则自动监听hidden alpha superview frame 变化
+-(BOOL)manuallyNotifyShowStatusChange;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////

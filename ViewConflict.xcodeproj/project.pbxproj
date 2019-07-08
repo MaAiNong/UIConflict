@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		776C524E22CF7C250012187C /* ViewConflictTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 776C524D22CF7C250012187C /* ViewConflictTests.m */; };
+		776C526322D2F6740012187C /* NSObject+YYAddForKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 776C526222D2F6740012187C /* NSObject+YYAddForKVO.m */; };
 		77B4ECA122C874F900F09B07 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECA022C874F900F09B07 /* AppDelegate.m */; };
 		77B4ECA422C874F900F09B07 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECA322C874F900F09B07 /* ViewController.m */; };
 		77B4ECA722C874F900F09B07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77B4ECA522C874F900F09B07 /* Main.storyboard */; };
@@ -36,6 +37,9 @@
 		776C524B22CF7C250012187C /* ViewConflictTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ViewConflictTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		776C524D22CF7C250012187C /* ViewConflictTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewConflictTests.m; sourceTree = "<group>"; };
 		776C524F22CF7C250012187C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		776C526122D2F6740012187C /* NSObject+YYAddForKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+YYAddForKVO.h"; sourceTree = "<group>"; };
+		776C526222D2F6740012187C /* NSObject+YYAddForKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+YYAddForKVO.m"; sourceTree = "<group>"; };
+		776C526422D2F6A80012187C /* YYCategoriesMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYCategoriesMacro.h; sourceTree = "<group>"; };
 		77B4EC9C22C874F900F09B07 /* ViewConflict.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewConflict.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77B4EC9F22C874F900F09B07 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		77B4ECA022C874F900F09B07 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -88,6 +92,16 @@
 			path = ViewConflictTests;
 			sourceTree = "<group>";
 		};
+		776C526522D309C00012187C /* QYKVO */ = {
+			isa = PBXGroup;
+			children = (
+				776C526422D2F6A80012187C /* YYCategoriesMacro.h */,
+				776C526122D2F6740012187C /* NSObject+YYAddForKVO.h */,
+				776C526222D2F6740012187C /* NSObject+YYAddForKVO.m */,
+			);
+			path = QYKVO;
+			sourceTree = "<group>";
+		};
 		77B4EC9322C874F900F09B07 = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +125,7 @@
 			children = (
 				77B4EC9F22C874F900F09B07 /* AppDelegate.h */,
 				77B4ECA022C874F900F09B07 /* AppDelegate.m */,
+				776C526522D309C00012187C /* QYKVO */,
 				77F997A622CDD979007CE27D /* QYConflict */,
 				77CA5E8922CDDB6700464891 /* DEMO */,
 				77B4ECA522C874F900F09B07 /* Main.storyboard */,
@@ -261,6 +276,7 @@
 			files = (
 				77B4ECBC22C8803E00F09B07 /* QYPlayerViewConflictDefine.m in Sources */,
 				77CA5EB022CDE42700464891 /* QYCommonView.m in Sources */,
+				776C526322D2F6740012187C /* NSObject+YYAddForKVO.m in Sources */,
 				77B4ECA422C874F900F09B07 /* ViewController.m in Sources */,
 				77B4ECAF22C874FD00F09B07 /* main.m in Sources */,
 				77CA5E8C22CDDB8300464891 /* QYPreadView.m in Sources */,

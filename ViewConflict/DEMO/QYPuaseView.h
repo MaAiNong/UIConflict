@@ -19,10 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)conflict_isShowing;
 
 //隐藏
--(void)conflict_hide:(QYConflictReason*)hideReason;
+-(void)conflict_hide:(nullable QYConflictReason*)hideReason;
 
 //显示
--(void)conflict_show:(QYConflictReason*)hideReason;
+-(void)conflict_show:(nullable QYConflictReason*)hideReason;
 
 @end
 
