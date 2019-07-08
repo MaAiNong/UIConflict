@@ -28,20 +28,13 @@
     return self;
 }
 
-//销毁
--(void)destroy{
-@synchronized (self) {
-    if(_conflictTable){
+-(void)dealloc{
+    if (_conflictTable) {
         [_conflictTable removeAllObjects];
         _conflictTable = nil;
     }
-    if (_conflictConfiguration_higher) {
-        _conflictConfiguration_higher = nil;
-    }
-    if (_conflictConfiguration_lower) {
-        _conflictConfiguration_lower = nil;
-    }
-}
+    _conflictConfiguration_higher = nil;
+    _conflictConfiguration_lower = nil;
 }
 
 //注册需要使用的 QYConflictViewConfig

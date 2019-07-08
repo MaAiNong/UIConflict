@@ -16,9 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 //唯一初始化方法
 -(id)init;
 
-//销毁
--(void)destroy;
-
 //注册需要使用的 QYConflictViewConfig
 -(void)registConflictConfiguration:(NSDictionary*)configuration;
 
