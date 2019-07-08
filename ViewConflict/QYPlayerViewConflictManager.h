@@ -44,8 +44,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)canShowView:(UIView<QYPlayerViewConflictProtocol>*)view;
 
 /**
- 
  view 显示隐藏发生变化，通过 [view conflict_isShowing] 来获取当前状态，并通知其他view更新状态，
+ 
+ 对于手动更新的view manuallyNotifyShowStatusChange == YES，需要调用这个方法
+ 否则不需要，会自动监听 
  如果需要释放view，可以调用 deregistView:，此时不需要再 调用此方法
  
  使用前请务必注册 务必保证 conflict_isShowing 准确性

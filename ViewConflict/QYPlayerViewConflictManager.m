@@ -154,14 +154,15 @@
             if (![self.conflictTable containsObject:view]) {
                 
                 [self.conflictTable addObject:view];
-                if (![self isManuallyView:view]) {
-                    [self registKVOForView:view];
-                }
                 
                 if ([self canShowView:view]) {
-                    [self showView:view withReason:nil];
+                    [self showRegistView:view];
                 }else{
-                    [self hideView:view withReason:nil];
+                    [self hideRegistView:view];
+                }
+                
+                if (![self isManuallyView:view]) {
+                    [self registKVOForView:view];
                 }
             }
         }
@@ -299,6 +300,20 @@
     }
 }
 
+//注册的时候 强行递归
+-(void)showRegistView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    
+    [view conflict_show:nil];
+    [self handleView:view show:YES];
+}
+
+//注册的时候 强行递归
+-(void)hideRegistView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    
+    [view conflict_hide:nil];
+    [self handleView:view show:NO];
+
+}
 
 -(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
