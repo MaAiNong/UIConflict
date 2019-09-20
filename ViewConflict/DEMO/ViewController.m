@@ -30,6 +30,34 @@
     QYReadyBuyView* _vwReadyBuy2;
 }
 
+
+//如果一个view的显示隐藏完全受控于 这个系统中的view 可以使用
+-(QYConfictHandler)defaultConflictHandler:(UIView*)view{
+    if (!view) {
+        return NULL;
+    }
+    __weak UIView* weakView = view;
+    QYConfictHandler handler = ^ BOOL (QYView_ConflictAction conflictAction){
+        switch (conflictAction) {
+                       case QYViewConflictAction_Hide:{
+                           weakView.hidden = YES;
+                       }break;
+                       case QYViewConflictAction_Show:{
+                           weakView.hidden = NO;
+                       }break;
+                       case QYViewConflictAction_ShowState:{
+                           return !weakView.isHidden;
+                       }
+                       default:break;
+                   }
+                   return !weakView.isHidden;
+    };
+    
+    return handler;
+}
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -40,6 +68,7 @@
         [self.view addSubview:preadView];preadView.backgroundColor = [UIColor redColor];
         preadView.conflict_showPriority = QYViewPriority_RollAD;//可以放在 QYPreadView 的初始化口里面
         _vwRoll = preadView;
+        preadView.confictHandler = [self defaultConflictHandler:preadView];
     }
     
     //注册需要处理的View
@@ -49,6 +78,7 @@
         pause.conflict_showPriority = QYViewPriority_PauseAD;//可以放在 QYPuaseView 的初始化口里面
         [pause setText:@"暂停"];
         _vwPause = pause;
+        pause.confictHandler = [self defaultConflictHandler:pause];
     }
     
     {
@@ -58,6 +88,7 @@
         view.conflict_showPriority = QYViewPriority_CommonViewAD;//可以放在 QYCommonView 的初始化口里面
         [view setText:@"浮层"];
         _vwCommon = view;
+        view.confictHandler = [self defaultConflictHandler:view];
     }
     
     {
@@ -67,6 +98,7 @@
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
         [view setText:@"随视购"];
         _vwReadyBuy = view;
+        _vwReadyBuy.confictHandler = [self defaultConflictHandler:_vwReadyBuy];
     }
     
     {
@@ -76,6 +108,7 @@
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
         [view setText:@"随视购"];
         _vwReadyBuy2 = view;
+        _vwReadyBuy2.confictHandler = [self defaultConflictHandler:_vwReadyBuy2];
     }
     
     //******************************必须保证1 2 3 顺序******************************
@@ -86,35 +119,29 @@
     
     //3 注册视图
     [_conflictManager registViews:@[_vwPause,_vwCommon,_vwReadyBuy2,_vwReadyBuy,_vwRoll]];
-
-//    [_conflictManager registView:_vwReadyBuy];
-//    [_conflictManager registView:_vwRoll];
-//    [_conflictManager registView:_vwPause];
-//    [_conflictManager registView:_vwCommon];
-//    [_conflictManager registView:_vwReadyBuy2];
     
 }
 
 -(IBAction)didRollControlButtonClick:(id)sender{
     static BOOL isShow = YES;
-    isShow = ![_vwRoll conflict_isShowing];
+    isShow = _vwRoll.isHidden;
     
     if(isShow){
         if ([_conflictManager canShowView:_vwRoll]) {
-            [_vwRoll conflict_show:nil];
+            _vwRoll.hidden = NO;
         }else{
             return;
         }
         
         if ([_conflictManager canShowView:_vwRoll]) {
-            [_vwRoll conflict_show:nil];
+            _vwRoll.hidden = NO;
         }else{
-            [_vwRoll conflict_hide:nil];
+            _vwRoll.hidden = YES;
         }
         
     }
     else{
-        [_vwRoll conflict_hide:nil];
+        _vwRoll.hidden = YES;
     }
     
     [_conflictManager notifyOtherViewsShowStatusChanged:_vwRoll];
@@ -122,17 +149,17 @@
 }
 -(IBAction)didPauseControlClick:(id)sender{
     static BOOL isShow = YES;
-    isShow = ![_vwPause conflict_isShowing];
+    isShow = _vwPause.isHidden;
     
     if(isShow){
         if ([_conflictManager canShowView:_vwPause]) {
-            [_vwPause conflict_show:nil];
+            _vwPause.hidden = NO;
         }else{
             return;
         }
     }
     else{
-        [_vwPause conflict_hide:nil];
+        _vwPause.hidden = YES;
     }
     
 
@@ -142,17 +169,17 @@
 -(IBAction)didCommonControlClick:(id)sender{
     
     static BOOL isShow = YES;
-    isShow = ![_vwCommon conflict_isShowing];
+    isShow = _vwCommon.isHidden;
     
     if(isShow){
         if ([_conflictManager canShowView:_vwCommon]) {
-            [_vwCommon conflict_show:nil];
+            _vwCommon.hidden = NO;
         }else{
             return;
         }
     }
     else{
-        [_vwCommon conflict_hide:nil];
+        _vwCommon.hidden = YES;
     }
     
 
@@ -164,17 +191,17 @@
     
     {
         static BOOL isShow = YES;
-        isShow = ![_vwReadyBuy conflict_isShowing];
+        isShow = [_vwReadyBuy isHidden];
         
         if(isShow){
             if ([_conflictManager canShowView:_vwReadyBuy]) {
-                [_vwReadyBuy conflict_show:nil];
+                [_vwReadyBuy setHidden:NO];
             }else{
                 return;
             }
         }
         else{
-            [_vwReadyBuy conflict_hide:nil];
+            [_vwReadyBuy setHidden:YES];
         }
         
 
@@ -183,17 +210,17 @@
     
     {
         static BOOL isShow = YES;
-        isShow = ![_vwReadyBuy2 conflict_isShowing];
+        isShow = [_vwReadyBuy2 isHidden];
         
         if(isShow){
             if ([_conflictManager canShowView:_vwReadyBuy2]) {
-                [_vwReadyBuy2 conflict_show:nil];
+                [_vwReadyBuy2 setHidden:NO];
             }else{
                 return;
             }
         }
         else{
-            [_vwReadyBuy2 conflict_hide:nil];
+            [_vwReadyBuy2 setHidden:YES];
         }
         
         

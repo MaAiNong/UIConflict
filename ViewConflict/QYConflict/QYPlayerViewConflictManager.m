@@ -99,7 +99,8 @@
                     
                     if (viewPriority == conflictView.conflict_showPriority&&//符合匹配的高优先级view
                         conflictView != view && //不是同一个View
-                        [conflictView conflict_isShowing]//当前正在展示
+                        conflictView.confictHandler&&//当前正在展示
+                        conflictView.confictHandler(QYViewConflictAction_ShowState)
                         ) {
                         
                         if([self isView:view conflictWithView:conflictView conflictType:confictType]){
@@ -226,9 +227,28 @@
 }
 }
 
+-(BOOL)isViewShowing:(UIView<QYPlayerViewConflictProtocol> *)view{
+    if (view&&view.confictHandler&&view.confictHandler(QYViewConflictAction_ShowState)) {
+        return YES;
+    }
+    return NO;
+}
+
+-(void)conflictHideForView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    if (view&&view.confictHandler) {
+        view.confictHandler(QYViewConflictAction_Hide);
+    }
+}
+
+-(void)conflictShowForView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    if (view&&view.confictHandler) {
+        view.confictHandler(QYViewConflictAction_Show);
+    }
+}
+
 - (void)handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
     
-    BOOL isValid = ([view conflict_isShowing]==isShow);
+    BOOL isValid = ([self isViewShowing:view]==isShow);
     if(!isValid){
 #if DEBUG
         NSLog(@"show message not equal %@",@(isShow));
@@ -244,11 +264,11 @@
 -(void)updateViewConflictsForChange:(UIView<QYPlayerViewConflictProtocol> *)view{
     
 #if DEBUG
-    NSLog(@"updateViewConflicts %@ %@",@(view.conflict_showPriority),@([view conflict_isShowing]));
+    NSLog(@"updateViewConflicts %@ %@",@(view.conflict_showPriority),@([self isViewShowing:view]));
     NSLog(@"%@",[NSThread callStackSymbols]);
 #endif
     
-    if([view conflict_isShowing]){
+    if([self isViewShowing:view]){
         //隐藏优先级低的
         [self hideViewPriorityLowerThan:view];
         
@@ -264,7 +284,7 @@
         return;
     }
     
-    BOOL currentShow = [view conflict_isShowing];
+    BOOL currentShow = [self isViewShowing:view];
     BOOL canShow = [self canShowView:view];
     if (currentShow && !canShow) {
         
@@ -281,16 +301,20 @@
 }
 
 -(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
-    
-        [view conflict_show:reason];
+
+        if (view.confictHandler) {
+            view.confictHandler(QYViewConflictAction_Show);
+        }
     
         [self handleView:view show:YES];
-
+    
 }
 
 -(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
     
-        [view conflict_hide:reason];
+        if (view.confictHandler) {
+           view.confictHandler(QYViewConflictAction_Hide);
+        }
     
         [self handleView:view show:NO];
 }
@@ -317,7 +341,7 @@
                     //获取低优先级View 并且从整体判断要不要显示
                     if (viewPriority == conflictView.conflict_showPriority &&
                         conflictView != view && //不是同一个View
-                        ![conflictView conflict_isShowing] && //当前不在显示
+                        ![self isViewShowing:conflictView] && //当前不在显示
                         [self canShowView:conflictView]) {//可以显示
                     
                         NSLog(@"%@ 显示view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
@@ -360,7 +384,8 @@
                     //低优先级 并且 和 当前要显示的view 冲突
                     if (viewPriority == conflictView.conflict_showPriority&&
                         conflictView != view && //不是同一个View
-                        [conflictView conflict_isShowing]&&//当前正在展示
+                        conflictView.confictHandler&&
+                        conflictView.confictHandler(QYViewConflictAction_ShowState)&&//当前正在展示
                         [self isView:view conflictWithView:conflictView conflictType:confictType]) {
 #if DEBUG
                             NSLog(@"%@ 隐藏view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
@@ -403,7 +428,9 @@
     }
     
     BOOL view1Showing = YES;//从view1 视角看 和view2 的关系
-    BOOL view2Showing = [view2 conflict_isShowing];
+    
+    BOOL view2Showing = view2.confictHandler && view2.confictHandler(QYViewConflictAction_ShowState);
+    
     if (view1Showing==view2Showing){
         if (QYViewConflictType_Exclusion == conflictType) {
         {

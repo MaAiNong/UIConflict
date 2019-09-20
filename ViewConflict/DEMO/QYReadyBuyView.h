@@ -14,15 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QYReadyBuyView : UILabel<QYPlayerViewConflictProtocol>
 
 @property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;
-
-//是否正在展示
--(BOOL)conflict_isShowing;
-
-//隐藏
--(void)conflict_hide:(QYConflictReason*)hideReason;
-
-//显示
--(void)conflict_show:(QYConflictReason*)hideReason;
+@property(nonatomic,strong)QYConfictHandler confictHandler;
 
 @end
 

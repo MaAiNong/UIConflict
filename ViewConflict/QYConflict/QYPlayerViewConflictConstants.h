@@ -30,4 +30,14 @@ typedef enum {
     
 }QYView_ShowPriority;
 
+//按照显示优先级排列，由上到下，优先级递减
+typedef enum {
+    
+    QYViewConflictAction_Unknow = 0,//未知 不处理
+    QYViewConflictAction_Show,//冲突处理允许显示
+    QYViewConflictAction_Hide,//冲突处理要求隐藏
+    QYViewConflictAction_ShowState,//当前的显示隐藏情况
+    
+}QYView_ConflictAction;
+
 #endif /* QYPlayerViewConflictConstants_h */

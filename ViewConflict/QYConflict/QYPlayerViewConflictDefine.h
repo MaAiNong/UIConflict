@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class QYConflictReason;
 @class QYPlayerViewConflictManager;
+
+//返回值代表是否 隐藏 显示
+typedef BOOL (^QYConfictHandler)(QYView_ConflictAction conflictAction);
+
 @protocol  QYPlayerViewConflictDelegate <NSObject>
 
 
@@ -26,14 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign)QYView_ShowPriority conflict_showPriority;
 
-//是否正在展示
--(BOOL)conflict_isShowing;
-
-//由配置表优先级判断该view应该隐藏 正常情况下处理完成后 conflict_isShowing 为NO,hideReason仅供参考
--(void)conflict_hide:(nullable QYConflictReason*)hideReason;
-
-//由配置表优先级判断改view应该显示 正常情况下处理完成后 conflict_isShowing 为YES,showReason仅供参考
--(void)conflict_show:(nullable QYConflictReason*)showReason;
+@property(nonatomic,strong)QYConfictHandler confictHandler;
 
 @end
 
