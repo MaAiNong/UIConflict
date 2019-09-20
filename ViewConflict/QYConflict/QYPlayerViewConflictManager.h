@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES 注册成功; NO 注册失败-不符合QYPlayerViewConflictProtocol
  */
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view;
--(void)registViews:(NSArray<QYPlayerViewConflictProtocol>*)views;
+-(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views;
 
 /**
  取消注册,会更新其他view的显示隐藏状态

@@ -1,14 +1,15 @@
 //
-//  QYPlayerViewConflictDefine.m
+//  QYConflictViewConfig.m
 //  ViewConflict
 //
-//  Created by xukaitiankevin on 2019/6/30.
+//  Created by xukaitian on 2019/9/20.
 //  Copyright © 2019 xukaitian. All rights reserved.
 //
 
-#import "QYPlayerViewConflictDefine.h"
+#import "QYConflictViewConfig.h"
 #import "QYPlayerViewConflictConstants.h"
 static QYConflictViewConfig* _sharedConfiguration;
+
 @implementation QYConflictViewConfig
 {
     NSDictionary* _mainPlayerConflictConfiguration;
@@ -84,8 +85,3 @@ static QYConflictViewConfig* _sharedConfiguration;
 
 @end
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@implementation QYConflictReason
-
-
-@end

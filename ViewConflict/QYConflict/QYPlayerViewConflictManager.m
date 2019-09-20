@@ -7,6 +7,7 @@
 //
 
 #import "QYPlayerViewConflictManager.h"
+#import "QYConflictViewConfig.h"
 @interface QYPlayerViewConflictManager()
 
 //@property(nonatomic,strong)NSMapTable* conflictCustom;
@@ -100,7 +101,7 @@
                     if (viewPriority == conflictView.conflict_showPriority&&//符合匹配的高优先级view
                         conflictView != view && //不是同一个View
                         conflictView.confictHandler&&//当前正在展示
-                        conflictView.confictHandler(QYViewConflictAction_ShowState)
+                        conflictView.confictHandler(QYViewConflictAction_ShowState,nil)
                         ) {
                         
                         if([self isView:view conflictWithView:conflictView conflictType:confictType]){
@@ -183,7 +184,7 @@
 }
 }
 
--(void)registViews:(NSArray<QYPlayerViewConflictProtocol> *)views{
+-(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views{
 @synchronized (self) {
     if (![views isKindOfClass:[NSArray class]]) {
         return;
@@ -228,7 +229,7 @@
 }
 
 -(BOOL)isViewShowing:(UIView<QYPlayerViewConflictProtocol> *)view{
-    if (view&&view.confictHandler&&view.confictHandler(QYViewConflictAction_ShowState)) {
+    if (view&&view.confictHandler&&view.confictHandler(QYViewConflictAction_ShowState,nil)) {
         return YES;
     }
     return NO;
@@ -236,13 +237,13 @@
 
 -(void)conflictHideForView:(UIView<QYPlayerViewConflictProtocol> *)view{
     if (view&&view.confictHandler) {
-        view.confictHandler(QYViewConflictAction_Hide);
+        view.confictHandler(QYViewConflictAction_Hide,nil);
     }
 }
 
 -(void)conflictShowForView:(UIView<QYPlayerViewConflictProtocol> *)view{
     if (view&&view.confictHandler) {
-        view.confictHandler(QYViewConflictAction_Show);
+        view.confictHandler(QYViewConflictAction_Show,nil);
     }
 }
 
@@ -300,20 +301,20 @@
     }
 }
 
--(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
+-(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
 
         if (view.confictHandler) {
-            view.confictHandler(QYViewConflictAction_Show);
+            view.confictHandler(QYViewConflictAction_Show,nil);
         }
     
         [self handleView:view show:YES];
     
 }
 
--(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(QYConflictReason*)reason{
+-(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
     
         if (view.confictHandler) {
-           view.confictHandler(QYViewConflictAction_Hide);
+           view.confictHandler(QYViewConflictAction_Hide,nil);
         }
     
         [self handleView:view show:NO];
@@ -385,7 +386,7 @@
                     if (viewPriority == conflictView.conflict_showPriority&&
                         conflictView != view && //不是同一个View
                         conflictView.confictHandler&&
-                        conflictView.confictHandler(QYViewConflictAction_ShowState)&&//当前正在展示
+                        conflictView.confictHandler(QYViewConflictAction_ShowState,nil)&&//当前正在展示
                         [self isView:view conflictWithView:conflictView conflictType:confictType]) {
 #if DEBUG
                             NSLog(@"%@ 隐藏view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
@@ -408,13 +409,9 @@
     }
 }
 
--(QYConflictReason*)conflictResonWithPriority:(QYView_ShowPriority)pri conflictType:(QYView_ConflictType)type{
-    QYConflictReason* reason = [[QYConflictReason alloc] init];
+-(NSDictionary*)conflictResonWithPriority:(QYView_ShowPriority)pri conflictType:(QYView_ConflictType)type{
     
-    reason.conflict_showPriority = pri;
-    reason.conflict_Type = type;
-    
-    return reason;
+    return @{};
 }
 
 
@@ -429,7 +426,7 @@
     
     BOOL view1Showing = YES;//从view1 视角看 和view2 的关系
     
-    BOOL view2Showing = view2.confictHandler && view2.confictHandler(QYViewConflictAction_ShowState);
+    BOOL view2Showing = view2.confictHandler && view2.confictHandler(QYViewConflictAction_ShowState,nil);
     
     if (view1Showing==view2Showing){
         if (QYViewConflictType_Exclusion == conflictType) {

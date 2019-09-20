@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14D76D0A2321FFE5001C5F0D /* QYPlayerViewConflictDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D76D082321FFE5001C5F0D /* QYPlayerViewConflictDefine.m */; };
 		14D76D0B2321FFE5001C5F0D /* QYPlayerViewConflictManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D76D092321FFE5001C5F0D /* QYPlayerViewConflictManager.m */; };
+		14F169842334770000E1A908 /* UIView+QYUIConflict.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F169832334770000E1A908 /* UIView+QYUIConflict.m */; };
+		14F169882334A6E000E1A908 /* QYConflictViewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F169872334A6E000E1A908 /* QYConflictViewConfig.m */; };
 		776C524E22CF7C250012187C /* ViewConflictTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 776C524D22CF7C250012187C /* ViewConflictTests.m */; };
 		77B4ECA122C874F900F09B07 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECA022C874F900F09B07 /* AppDelegate.m */; };
 		77B4ECA422C874F900F09B07 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECA322C874F900F09B07 /* ViewController.m */; };
@@ -16,10 +17,6 @@
 		77B4ECA922C874FD00F09B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77B4ECA822C874FD00F09B07 /* Assets.xcassets */; };
 		77B4ECAC22C874FD00F09B07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77B4ECAA22C874FD00F09B07 /* LaunchScreen.storyboard */; };
 		77B4ECAF22C874FD00F09B07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B4ECAE22C874FD00F09B07 /* main.m */; };
-		77CA5E8C22CDDB8300464891 /* QYPreadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5E8B22CDDB8300464891 /* QYPreadView.m */; };
-		77CA5EAC22CDE36A00464891 /* QYReadyBuyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */; };
-		77CA5EAD22CDE36A00464891 /* QYPauseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAB22CDE36A00464891 /* QYPauseView.m */; };
-		77CA5EB022CDE42700464891 /* QYCommonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA5EAF22CDE42700464891 /* QYCommonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,8 +33,12 @@
 		14D76D052321FFE5001C5F0D /* QYPlayerViewConflictConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictConstants.h; sourceTree = "<group>"; };
 		14D76D062321FFE5001C5F0D /* QYPlayerViewConflictManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictManager.h; sourceTree = "<group>"; };
 		14D76D072321FFE5001C5F0D /* QYPlayerViewConflictDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictDefine.h; sourceTree = "<group>"; };
-		14D76D082321FFE5001C5F0D /* QYPlayerViewConflictDefine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYPlayerViewConflictDefine.m; sourceTree = "<group>"; };
 		14D76D092321FFE5001C5F0D /* QYPlayerViewConflictManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYPlayerViewConflictManager.m; sourceTree = "<group>"; };
+		14F169822334770000E1A908 /* UIView+QYUIConflict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+QYUIConflict.h"; sourceTree = "<group>"; };
+		14F169832334770000E1A908 /* UIView+QYUIConflict.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+QYUIConflict.m"; sourceTree = "<group>"; };
+		14F169852334776800E1A908 /* QYPlayerViewConflictPublic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPlayerViewConflictPublic.h; sourceTree = "<group>"; };
+		14F169862334A6E000E1A908 /* QYConflictViewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYConflictViewConfig.h; sourceTree = "<group>"; };
+		14F169872334A6E000E1A908 /* QYConflictViewConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYConflictViewConfig.m; sourceTree = "<group>"; };
 		776C524B22CF7C250012187C /* ViewConflictTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ViewConflictTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		776C524D22CF7C250012187C /* ViewConflictTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewConflictTests.m; sourceTree = "<group>"; };
 		776C524F22CF7C250012187C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -51,14 +52,6 @@
 		77B4ECAB22C874FD00F09B07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		77B4ECAD22C874FD00F09B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77B4ECAE22C874FD00F09B07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		77CA5E8A22CDDB8300464891 /* QYPreadView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYPreadView.h; sourceTree = "<group>"; };
-		77CA5E8B22CDDB8300464891 /* QYPreadView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYPreadView.m; sourceTree = "<group>"; };
-		77CA5EA822CDE36A00464891 /* QYReadyBuyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYReadyBuyView.h; sourceTree = "<group>"; };
-		77CA5EA922CDE36A00464891 /* QYPuaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QYPuaseView.h; sourceTree = "<group>"; };
-		77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYReadyBuyView.m; sourceTree = "<group>"; };
-		77CA5EAB22CDE36A00464891 /* QYPauseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QYPauseView.m; sourceTree = "<group>"; };
-		77CA5EAE22CDE42700464891 /* QYCommonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QYCommonView.h; sourceTree = "<group>"; };
-		77CA5EAF22CDE42700464891 /* QYCommonView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QYCommonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,11 +75,15 @@
 		14D76CFD2321FF9C001C5F0D /* QYConflict */ = {
 			isa = PBXGroup;
 			children = (
+				14F169852334776800E1A908 /* QYPlayerViewConflictPublic.h */,
 				14D76D052321FFE5001C5F0D /* QYPlayerViewConflictConstants.h */,
 				14D76D072321FFE5001C5F0D /* QYPlayerViewConflictDefine.h */,
-				14D76D082321FFE5001C5F0D /* QYPlayerViewConflictDefine.m */,
+				14F169862334A6E000E1A908 /* QYConflictViewConfig.h */,
+				14F169872334A6E000E1A908 /* QYConflictViewConfig.m */,
 				14D76D062321FFE5001C5F0D /* QYPlayerViewConflictManager.h */,
 				14D76D092321FFE5001C5F0D /* QYPlayerViewConflictManager.m */,
+				14F169822334770000E1A908 /* UIView+QYUIConflict.h */,
+				14F169832334770000E1A908 /* UIView+QYUIConflict.m */,
 			);
 			path = QYConflict;
 			sourceTree = "<group>";
@@ -139,14 +136,6 @@
 			children = (
 				77B4ECA222C874F900F09B07 /* ViewController.h */,
 				77B4ECA322C874F900F09B07 /* ViewController.m */,
-				77CA5E8A22CDDB8300464891 /* QYPreadView.h */,
-				77CA5E8B22CDDB8300464891 /* QYPreadView.m */,
-				77CA5EA922CDE36A00464891 /* QYPuaseView.h */,
-				77CA5EAB22CDE36A00464891 /* QYPauseView.m */,
-				77CA5EAE22CDE42700464891 /* QYCommonView.h */,
-				77CA5EAF22CDE42700464891 /* QYCommonView.m */,
-				77CA5EA822CDE36A00464891 /* QYReadyBuyView.h */,
-				77CA5EAA22CDE36A00464891 /* QYReadyBuyView.m */,
 			);
 			path = DEMO;
 			sourceTree = "<group>";
@@ -259,14 +248,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77CA5EB022CDE42700464891 /* QYCommonView.m in Sources */,
 				77B4ECA422C874F900F09B07 /* ViewController.m in Sources */,
 				77B4ECAF22C874FD00F09B07 /* main.m in Sources */,
-				77CA5E8C22CDDB8300464891 /* QYPreadView.m in Sources */,
-				77CA5EAC22CDE36A00464891 /* QYReadyBuyView.m in Sources */,
 				77B4ECA122C874F900F09B07 /* AppDelegate.m in Sources */,
-				14D76D0A2321FFE5001C5F0D /* QYPlayerViewConflictDefine.m in Sources */,
-				77CA5EAD22CDE36A00464891 /* QYPauseView.m in Sources */,
+				14F169882334A6E000E1A908 /* QYConflictViewConfig.m in Sources */,
+				14F169842334770000E1A908 /* UIView+QYUIConflict.m in Sources */,
 				14D76D0B2321FFE5001C5F0D /* QYPlayerViewConflictManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

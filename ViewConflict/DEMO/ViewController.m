@@ -7,11 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "QYPlayerViewConflictManager.h"
-#import "QYPreadView.h"
-#import "QYPuaseView.h"
-#import "QYCommonView.h"
-#import "QYReadyBuyView.h"
+#import "QYPlayerViewConflictPublic.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *rollControlButton;
@@ -23,11 +19,11 @@
 
 @implementation ViewController{
     QYPlayerViewConflictManager* _conflictManager;
-    QYPreadView* _vwRoll;
-    QYPuaseView* _vwPause;
-    QYCommonView* _vwCommon;
-    QYReadyBuyView* _vwReadyBuy;
-    QYReadyBuyView* _vwReadyBuy2;
+    UILabel* _vwRoll;
+    UILabel* _vwPause;
+    UILabel* _vwCommon;
+    UILabel* _vwReadyBuy;
+    UILabel* _vwReadyBuy2;
 }
 
 
@@ -37,7 +33,8 @@
         return NULL;
     }
     __weak UIView* weakView = view;
-    QYConfictHandler handler = ^ BOOL (QYView_ConflictAction conflictAction){
+    QYConfictHandler handler = ^ BOOL (QYView_ConflictAction conflictAction,NSDictionary* other)
+    {
         switch (conflictAction) {
                        case QYViewConflictAction_Hide:{
                            weakView.hidden = YES;
@@ -63,7 +60,7 @@
     
     //注册需要处理的View
     {
-        QYPreadView* preadView = [[QYPreadView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        UILabel* preadView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         [preadView setText:@"贴片"];
         [self.view addSubview:preadView];preadView.backgroundColor = [UIColor redColor];
         preadView.conflict_showPriority = QYViewPriority_RollAD;//可以放在 QYPreadView 的初始化口里面
@@ -73,7 +70,7 @@
     
     //注册需要处理的View
     {
-        QYPuaseView* pause = [[QYPuaseView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-100, 100, 100)];
+        UILabel* pause = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-100, 100, 100)];
         [self.view addSubview:pause];pause.backgroundColor = [UIColor orangeColor];
         pause.conflict_showPriority = QYViewPriority_PauseAD;//可以放在 QYPuaseView 的初始化口里面
         [pause setText:@"暂停"];
@@ -83,7 +80,7 @@
     
     {
         //注册需要处理的View
-        QYCommonView* view= [[QYCommonView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, self.view.bounds.size.height-100, 100, 100)];
+        UILabel* view= [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, self.view.bounds.size.height-100, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor yellowColor];
         view.conflict_showPriority = QYViewPriority_CommonViewAD;//可以放在 QYCommonView 的初始化口里面
         [view setText:@"浮层"];
@@ -93,7 +90,7 @@
     
     {
         //注册需要处理的View
-        QYReadyBuyView* view= [[QYReadyBuyView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100,0, 100, 100)];
+        UILabel* view= [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100,0, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor greenColor];
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
         [view setText:@"随视购"];
@@ -103,7 +100,7 @@
     
     {
         //注册需要处理的View
-        QYReadyBuyView* view= [[QYReadyBuyView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100-50, self.view.bounds.size.height-100-50, 100, 100)];
+        UILabel* view= [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100-50, self.view.bounds.size.height-100-50, 100, 100)];
         [self.view addSubview:view];view.backgroundColor = [UIColor greenColor];
         view.conflict_showPriority = QYViewPriority_ReadyBuyOverlay;//可以放在 QYReadyBuyView 的初始化口里面
         [view setText:@"随视购"];
@@ -119,6 +116,12 @@
     
     //3 注册视图
     [_conflictManager registViews:@[_vwPause,_vwCommon,_vwReadyBuy2,_vwReadyBuy,_vwRoll]];
+    
+//    [_conflictManager registView:_vwPause];
+//    [_conflictManager registView:_vwReadyBuy];
+//    [_conflictManager registView:_vwReadyBuy2];
+//    [_conflictManager registView:_vwRoll];
+//    [_conflictManager registView:_vwCommon];
     
 }
 
