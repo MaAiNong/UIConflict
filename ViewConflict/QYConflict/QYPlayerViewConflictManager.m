@@ -52,7 +52,6 @@
         NSLog(@"configuration %@ not valid",configuration);
         NSLog(@"%@",[NSThread callStackSymbols]);
         NSLog(@"--------------------------------------------------------");
-        NSAssert(NO, @"not valid configuration");
 #endif
     }
 }
@@ -159,9 +158,13 @@
                 
                 if ([self canShowView:view]) {
                     
-                    [self showView:view withReason:nil];
+                    [self bfs_showView:view withReason:nil];
+                    [self bfs_handleView:view show:YES];
+                    
                 }else{
-                    [self hideView:view withReason:nil];
+                    
+                    [self bfs_hideView:view withReason:nil];
+                    [self bfs_handleView:view show:NO];
                 }
             }
         }
@@ -171,7 +174,6 @@
         NSLog(@"view %@ not conformsTo QYPlayerViewConflictProtocol",view);
         NSLog(@"%@",[NSThread callStackSymbols]);
         NSLog(@"--------------------------------------------------------");
-        NSAssert(NO, @"not valid view");
 #endif
         return NO;
         
@@ -203,7 +205,7 @@
     
     [self.conflictTable removeObject:view];
     //显示优先级低的
-    [self showViewPriorityLowerThan:view];
+    [self bfs_showViewPriorityLowerThan:view];
 }
 }
 
@@ -220,11 +222,11 @@
 #if DEBUG
         NSLog(@"view %@ 没有注册",view);
         NSLog(@"%@",[NSThread callStackSymbols]);
-        NSAssert(NO,@"view is not registed",nil);
 #endif
         return;
     }
-    [self updateViewConflictsForChange:view];
+//    [self updateViewConflictsForChange:view];
+    [self bfs_updateViewConflictsForChange:view];
 }
 }
 
@@ -247,22 +249,21 @@
     }
 }
 
-- (void)handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
+- (void)bfs_handleView:(UIView<QYPlayerViewConflictProtocol> *)view show:(BOOL)isShow{
     
     BOOL isValid = ([self isViewShowing:view]==isShow);
     if(!isValid){
 #if DEBUG
         NSLog(@"show message not equal %@",@(isShow));
         NSLog(@"%@",[NSThread callStackSymbols]);
-        NSAssert(isValid,@"show message not equal",nil);
 #endif
         return;
     }
-    [self updateViewConflictsForChange:view];
+    [self bfs_updateViewConflictsForChange:view];
 
 }
 
--(void)updateViewConflictsForChange:(UIView<QYPlayerViewConflictProtocol> *)view{
+-(void)bfs_updateViewConflictsForChange:(UIView<QYPlayerViewConflictProtocol> *)view{
     
 #if DEBUG
     NSLog(@"updateViewConflicts %@ %@",@(view.conflict_showPriority),@([self isViewShowing:view]));
@@ -271,106 +272,92 @@
     
     if([self isViewShowing:view]){
         //隐藏优先级低的
-        [self hideViewPriorityLowerThan:view];
+        [self bfs_hideViewPriorityLowerThan:view];
         
     }else{
         //显示优先级低的
-        [self showViewPriorityLowerThan:view];
+        [self bfs_showViewPriorityLowerThan:view];
     }
 }
 
--(void)updateShowHideStatusForView:(UIView<QYPlayerViewConflictProtocol> *)view
-{
-    if (![self registView:view]) {
-        return;
-    }
-    
-    BOOL currentShow = [self isViewShowing:view];
-    BOOL canShow = [self canShowView:view];
-    if (currentShow && !canShow) {
-        
-        [self hideView:view withReason:CONFLICT_REASON(QYViewConflictType_Unknown, QYViewConflictType_Unknown)];
-        return;
-    }
-    
-    if (!currentShow && canShow) {
-        
-        [self showView:view withReason:CONFLICT_REASON(QYViewConflictType_Unknown, QYViewConflictType_Unknown)];
-        
-        return;
-    }
-}
 
--(void)showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
-
+-(void)bfs_showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
+    
         if (view.confictHandler) {
             view.confictHandler(QYViewConflictAction_Show,nil);
         }
-    
-        [self handleView:view show:YES];
-    
 }
 
--(void)hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
-    
-        if (view.confictHandler) {
-           view.confictHandler(QYViewConflictAction_Hide,nil);
-        }
-    
-        [self handleView:view show:NO];
-}
 
-#pragma mark --- handle PriorityLower
-//显示优先级低的view
--(void)showViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
-    if (self.conflictTable.count>0 && [self.conflictConfiguration_lower isKindOfClass:[NSDictionary class]]) {
-        //遍历出低优先级的View 然后判断他们能不能显示
-        NSArray* conflicts = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
-        if ([conflicts isKindOfClass:[NSArray class]] && conflicts.count>0) {
-            
-            for (NSDictionary* conflict in conflicts) {
-                QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
-                if (QYViewPriority_Unknow == viewPriority) {
-                    continue;
-                }
-                QYView_ConflictType confictType = [conflict[KEY_CONFLICT] intValue];
-                
-                NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
-                
-                UIView<QYPlayerViewConflictProtocol>* conflictView;
-                while ((conflictView = [enumerator nextObject])) {
-                    //获取低优先级View 并且从整体判断要不要显示
-                    if (viewPriority == conflictView.conflict_showPriority &&
-                        conflictView != view && //不是同一个View
-                        ![self isViewShowing:conflictView] && //当前不在显示
-                        [self canShowView:conflictView]) {//可以显示
-                    
-                        NSLog(@"%@ 显示view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
-
-                        [self showView:conflictView withReason:CONFLICT_REASON(view.conflict_showPriority, confictType)];
-                    }
-                }
-            }
-            
-        }else{
-#if DEBUG
-            NSLog(@"%@ 没有比这个view优先级低的注册：%@ ",NSStringFromSelector(_cmd),@(view.conflict_showPriority));
-#endif
-        }
-        
-    }else{
-#if DEBUG
-        NSLog(@"%@ 冲突表：%@ or lower：为空:%@",NSStringFromSelector(_cmd),@(self.conflictTable.count),self.conflictConfiguration_lower);
-#endif
+-(void)bfs_hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
+    if (view.confictHandler) {
+       view.confictHandler(QYViewConflictAction_Hide,nil);
     }
 }
 
+
+#pragma mark --- handle PriorityLower
+
+//显示优先级低的view
+-(void)bfs_showViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
+     if (self.conflictTable.count>0 && [self.conflictConfiguration_lower isKindOfClass:[NSDictionary class]]) {
+            //遍历出低优先级的View 然后判断他们能不能显示
+            NSArray* conflicts = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
+            if ([conflicts isKindOfClass:[NSArray class]] && conflicts.count>0) {
+                NSHashTable* tmpTable = [NSHashTable weakObjectsHashTable];
+                for (NSDictionary* conflict in conflicts) {
+                    QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
+                    if (QYViewPriority_Unknow == viewPriority) {
+                        continue;
+                    }
+                    
+                    NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
+                    
+                    UIView<QYPlayerViewConflictProtocol>* conflictView;
+                    while ((conflictView = [enumerator nextObject])) {
+                        //获取低优先级View 并且从整体判断要不要显示
+                        if (viewPriority == conflictView.conflict_showPriority &&
+                            conflictView != view && //不是同一个View
+                            ![self isViewShowing:conflictView] && //当前不在显示
+                            [self canShowView:conflictView]) {//可以显示
+#if DEBUG
+                            NSLog(@"%@ 显示view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
+#endif
+
+                            [self bfs_showView:conflictView withReason:nil];
+                            
+                            [tmpTable addObject:conflictView];
+                        }
+                    }
+                }
+                
+                for (UIView<QYPlayerViewConflictProtocol>* tmpView in tmpTable) {
+                    [self bfs_handleView:tmpView show:YES];
+                }
+                
+            }else{
+    #if DEBUG
+                NSLog(@"%@ 没有比这个view优先级低的注册：%@ ",NSStringFromSelector(_cmd),@(view.conflict_showPriority));
+    #endif
+            }
+            
+        }else{
+    #if DEBUG
+            NSLog(@"%@ 冲突表：%@ or lower：为空:%@",NSStringFromSelector(_cmd),@(self.conflictTable.count),self.conflictConfiguration_lower);
+    #endif
+        }
+}
+
+
 //通知低优先级view隐藏
--(void)hideViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
+-(void)bfs_hideViewPriorityLowerThan:(UIView<QYPlayerViewConflictProtocol> *)view{
     if (self.conflictTable.count>0 && [self.conflictConfiguration_lower isKindOfClass:[NSDictionary class]]) {
         
+        //1 拿到比view优先级要低的view 数据
         NSArray* conflicts = [self.conflictConfiguration_lower objectForKey:@(view.conflict_showPriority)];
         if ([conflicts isKindOfClass:[NSArray class]] && conflicts.count>0) {
+            
+            NSHashTable* tmpTable = [NSHashTable weakObjectsHashTable];
             
             for (NSDictionary* conflict in conflicts) {
                 QYView_ShowPriority viewPriority = [conflict[KEY_PRIORITY] intValue];
@@ -381,6 +368,7 @@
                 
                 NSEnumerator *enumerator = [self.conflictTable objectEnumerator];
                 UIView<QYPlayerViewConflictProtocol>* conflictView;
+                
                 while ((conflictView = [enumerator nextObject])) {
                     //低优先级 并且 和 当前要显示的view 冲突
                     if (viewPriority == conflictView.conflict_showPriority&&
@@ -391,14 +379,20 @@
 #if DEBUG
                             NSLog(@"%@ 隐藏view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
 #endif
-                        [self hideView:conflictView withReason:CONFLICT_REASON(view.conflict_showPriority,confictType)];
+                        //2 隐藏 低优先级 并且 和 当前view 展示冲突的视图
+                        [self bfs_hideView:conflictView withReason:nil];
+                        [tmpTable addObject:conflictView];
                     }
                 }
+            }
+            //3 对于展示状态发生过变化的视图，修改其对应冲突
+            for (UIView<QYPlayerViewConflictProtocol>* tmpview in tmpTable) {
+                [self bfs_handleView:tmpview show:NO];
             }
         
         }else{
 #if DEBUG
-            NSLog(@"%@ 没有比这个view优先级低的注册：%@ ",NSStringFromSelector(_cmd),@(view.conflict_showPriority));
+        NSLog(@"%@ 没有比这个view优先级低的注册：%@ ",NSStringFromSelector(_cmd),@(view.conflict_showPriority));
 #endif
         }
         
