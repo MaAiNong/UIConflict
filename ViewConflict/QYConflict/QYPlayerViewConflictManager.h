@@ -19,20 +19,31 @@ NS_ASSUME_NONNULL_BEGIN
 //注册需要使用的 QYConflictViewConfig
 -(void)registConflictConfiguration:(NSDictionary*)configuration;
 
+//单纯注册
+-(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view;
+
 /**
  注册需要处理优先级的view 完全走 QYConflictViewConfig 里的优先级配置字典
+ 
+ 除了注册外，
  
  @param view 符合QYPlayerViewConflictProtocol 的view
  @return YES 注册成功; NO 注册失败-不符合QYPlayerViewConflictProtocol
  */
--(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view;
--(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views;
+-(BOOL)registAndCheckView:(UIView<QYPlayerViewConflictProtocol>*)view;
+-(void)registAndCheckViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views;
+
 
 /**
  取消注册,会更新其他view的显示隐藏状态
  @param view 需要删除处理的view
  */
 -(void)deregistView:(UIView<QYPlayerViewConflictProtocol>*)view;
+
+/**
+ 所有view 全部取消注册
+ */
+-(void)deregistAllViews;
 
 
 /**
@@ -53,6 +64,12 @@ NS_ASSUME_NONNULL_BEGIN
  使用前请务必注册 务必保证 conflict_isShowing 准确性
 */
 -(void)notifyOtherViewsShowStatusChanged:(UIView<QYPlayerViewConflictProtocol>*)view;
+
+
+/// 作用同上
+/// @param view view
+/// @param isShow 对view 当前展示状态的预期，如果预期与 view QYViewConflictAction_ShowState 不符合 将不执行任何操作，如符合同上述方法
+-(void)notifyOtherViewsShowStatusChanged:(UIView<QYPlayerViewConflictProtocol>*)view showExpected:(BOOL)isShow;
 
 @end
 

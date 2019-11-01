@@ -141,6 +141,19 @@
       }
 }
 
+//单纯注册
+-(BOOL)registView:(UIView<QYPlayerViewConflictProtocol> *)view{
+    if ([view isKindOfClass:[UIView class]]&&
+        [view conformsToProtocol:@protocol(QYPlayerViewConflictProtocol)]) {
+        
+        if (![self.conflictTable containsObject:view]) {
+            [self.conflictTable addObject:view];
+        }
+        return YES;
+    }
+    return NO;
+}
+
 //注册VIew
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view customHigherPriority:(NSSet*)HigherPriorities{
     
@@ -180,19 +193,19 @@
     }
 }
 
--(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view{
+-(BOOL)registAndCheckView:(UIView<QYPlayerViewConflictProtocol>*)view{
 @synchronized (self) {
     return  [self registView:view customHigherPriority:nil];
 }
 }
 
--(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views{
+-(void)registAndCheckViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views{
 @synchronized (self) {
     if (![views isKindOfClass:[NSArray class]]) {
         return;
     }
     for (UIView<QYPlayerViewConflictProtocol>* view in views) {
-        [self registView:view];
+        [self registAndCheckView:view];
     }
 }
 }
@@ -207,6 +220,15 @@
     //显示优先级低的
     [self bfs_showViewPriorityLowerThan:view];
 }
+}
+
+/**
+ 所有view 全部取消注册
+ */
+-(void)deregistAllViews{
+    @synchronized (self) {
+        [self.conflictTable removeAllObjects];
+    }
 }
 
 /**
@@ -225,9 +247,33 @@
 #endif
         return;
     }
-//    [self updateViewConflictsForChange:view];
+    
     [self bfs_updateViewConflictsForChange:view];
 }
+}
+
+-(void)notifyOtherViewsShowStatusChanged:(UIView<QYPlayerViewConflictProtocol>*)view showExpected:(BOOL)isShow{
+    
+    @synchronized (self) {
+        if (!view) {
+            return;
+        }
+        if (![self isRegistedView:view]) {
+    #if DEBUG
+            NSLog(@"view %@ 没有注册",view);
+            NSLog(@"%@",[NSThread callStackSymbols]);
+    #endif
+            return;
+        }
+        
+        if (!view.confictHandler || isShow != view.confictHandler(QYViewConflictAction_ShowState,nil)) {
+            
+            return;
+        }
+        
+        [self bfs_updateViewConflictsForChange:view];
+    }
+    
 }
 
 -(BOOL)isViewShowing:(UIView<QYPlayerViewConflictProtocol> *)view{
@@ -280,19 +326,21 @@
     }
 }
 
-
--(void)bfs_showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
+//显示并返回是否显示成功
+-(BOOL)bfs_showView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
     
-        if (view.confictHandler) {
-            view.confictHandler(QYViewConflictAction_Show,nil);
-        }
+    if (view.confictHandler) {
+       return view.confictHandler(QYViewConflictAction_Show,nil);
+    }
+    return NO;
 }
 
-
--(void)bfs_hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
+//隐藏并返回是否隐藏成功
+-(BOOL)bfs_hideView:(UIView<QYPlayerViewConflictProtocol> *)view withReason:(NSDictionary*)reason{
     if (view.confictHandler) {
-       view.confictHandler(QYViewConflictAction_Hide,nil);
+       return !view.confictHandler(QYViewConflictAction_Hide,nil);
     }
+    return NO;
 }
 
 
@@ -324,9 +372,9 @@
                             NSLog(@"%@ 显示view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
 #endif
 
-                            [self bfs_showView:conflictView withReason:nil];
-                            
-                            [tmpTable addObject:conflictView];
+                            if([self bfs_showView:conflictView withReason:nil]){
+                                [tmpTable addObject:conflictView];
+                            }
                         }
                     }
                 }
@@ -380,8 +428,9 @@
                             NSLog(@"%@ 隐藏view：%@ %@ ",NSStringFromSelector(_cmd),@(conflictView.conflict_showPriority),@(view.conflict_showPriority));
 #endif
                         //2 隐藏 低优先级 并且 和 当前view 展示冲突的视图
-                        [self bfs_hideView:conflictView withReason:nil];
-                        [tmpTable addObject:conflictView];
+                        if([self bfs_hideView:conflictView withReason:nil]){
+                            [tmpTable addObject:conflictView];
+                        }
                     }
                 }
             }
