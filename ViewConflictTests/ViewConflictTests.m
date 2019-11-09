@@ -31,12 +31,12 @@
     // This is an example of a performance test case.
     [self measureBlock:^{
         // Put the code you want to measure the time of here.
+        int  i = 10;
+        while (i) {
+            
+            i--;
+        }
     }];
-}
-
-- (void)testQYConflictViewConfig{
-    NSDictionary* dic = nil;
-    XCTAssert(NO == [QYConflictViewConfig isValidConflictConfig:dic],@"QYConflictViewConfig isValidConflictConfig 空值判断未通过");
 }
 
 @end

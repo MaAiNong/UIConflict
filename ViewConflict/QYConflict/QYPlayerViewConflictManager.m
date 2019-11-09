@@ -154,6 +154,16 @@
     return NO;
 }
 
+-(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views{
+    if ([views isKindOfClass:[NSArray class]]) {
+        
+        for (UIView<QYPlayerViewConflictProtocol>* view in views) {
+            
+            [self registView:view];
+        }
+    }
+}
+
 //注册VIew
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view customHigherPriority:(NSSet*)HigherPriorities{
     
@@ -220,6 +230,15 @@
     //显示优先级低的
     [self bfs_showViewPriorityLowerThan:view];
 }
+}
+
+-(void)deregistViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views{
+    if ([views isKindOfClass:[NSArray class]]) {
+        for (UIView<QYPlayerViewConflictProtocol>* view in views) {
+            
+            [self deregistView:view];
+        }
+    }
 }
 
 /**

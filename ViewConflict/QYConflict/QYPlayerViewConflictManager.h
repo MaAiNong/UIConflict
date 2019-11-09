@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //单纯注册
 -(BOOL)registView:(UIView<QYPlayerViewConflictProtocol>*)view;
+-(void)registViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views;
 
 /**
  注册需要处理优先级的view 完全走 QYConflictViewConfig 里的优先级配置字典
@@ -39,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param view 需要删除处理的view
  */
 -(void)deregistView:(UIView<QYPlayerViewConflictProtocol>*)view;
+-(void)deregistViews:(NSArray<UIView<QYPlayerViewConflictProtocol>* >*)views;
 
 /**
  所有view 全部取消注册
